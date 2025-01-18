@@ -1,10 +1,14 @@
 fn main() {
-    guess();
+    let guess1: [i8; 4] = [1, 2, 3, 4];
+    let guess2: [i8; 4] = [4, 3, 2, 1];
+    let guess3: [i8; 4] = [1, 2, 3, 5];
+    guess(guess1);
+    guess(guess2);
+    guess(guess3);
 }
 
-fn guess() {
+fn guess(guess: [i8; 4]) {
     let number: [i8; 4] = [1, 2, 3, 4];
-    let guess: [i8; 4] = [4, 2, 3, 1];
     
     let mut cows:i8 = 0;
     let mut bulls:i8 = 0;
