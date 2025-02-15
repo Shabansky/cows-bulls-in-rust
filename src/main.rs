@@ -7,21 +7,19 @@ fn main() {
     debug_assert_eq!(guess(guess2), (0, 4));
     debug_assert_eq!(guess(guess3), (3, 0));
 
-    debug_assert_eq!(set_guess("1234"), [1, 2, 3, 4]);
-    debug_assert_eq!(set_guess("abcd"), [0, 0, 0, 0]);
+    debug_assert_eq!(set_guess("1234"), Some([1, 2, 3, 4]));
+    debug_assert_eq!(set_guess("abcd"), None);
 }
 
-fn set_guess(guess: &str) -> [i8; 4] {
+fn set_guess(guess: &str) -> Option<[i8; 4]> {
     let mut guess_arr = [0; 4];
     for (index, character) in guess.chars().enumerate() {
         if !character.is_numeric() {
-            println!("{character} is not a numeral");
-            break;
+            return None;
         }
-
-        guess_arr[index] = character as i8;
+        guess_arr[index] = character.to_digit(10).unwrap() as i8;
     }
-    guess_arr
+    Some(guess_arr)
 }
 
 fn guess(guess: [i8; 4]) -> (i8, i8) {
