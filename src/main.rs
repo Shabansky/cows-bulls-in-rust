@@ -10,10 +10,24 @@ fn main() {
 
     match guess_input {
         Some(_) => {
-            println!("{:?}", guess(guess_input.unwrap()))
+            print_guess_result(&input, guess(guess_input.unwrap()));
         }
         None => println!("{} is not 4 digit or a numeral", input.trim()),
     }
+}
+
+fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
+    let bulls = guess_results.0;
+    let cows = guess_results.1;
+
+    //TODO: Use the above to modify bulls to bull if singular etc.
+
+    println!(
+        "{} has {} bulls and {} cows",
+        guess.trim(),
+        guess_results.0,
+        guess_results.1
+    );
 }
 
 fn asserts() {
