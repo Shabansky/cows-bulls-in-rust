@@ -1,7 +1,5 @@
 use std::io;
 fn main() {
-    asserts();
-
     let mut input = String::new();
 
     let _ = io::stdin().read_line(&mut input);
@@ -30,20 +28,6 @@ fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
     );
 }
 
-fn asserts() {
-    let guess1: [i8; 4] = [1, 2, 3, 4];
-    let guess2: [i8; 4] = [4, 3, 2, 1];
-    let guess3: [i8; 4] = [1, 2, 3, 5];
-
-    debug_assert_eq!(guess(guess1), (4, 0));
-    debug_assert_eq!(guess(guess2), (0, 4));
-    debug_assert_eq!(guess(guess3), (3, 0));
-
-    debug_assert_eq!(set_guess("1234"), Some([1, 2, 3, 4]));
-    debug_assert_eq!(set_guess("abcd"), None);
-    debug_assert_eq!(set_guess("1234   "), None);
-}
-
 fn set_guess(guess: &str) -> Option<[i8; 4]> {
     if guess.len() != 4 {
         return None;
@@ -57,6 +41,13 @@ fn set_guess(guess: &str) -> Option<[i8; 4]> {
         guess_arr[index] = character.to_digit(10).unwrap() as i8;
     }
     Some(guess_arr)
+}
+
+#[test]
+fn test_set_guess() {
+    debug_assert_eq!(set_guess("1234"), Some([1, 2, 3, 4]));
+    debug_assert_eq!(set_guess("abcd"), None);
+    debug_assert_eq!(set_guess("1234   "), None);
 }
 
 fn guess(guess: [i8; 4]) -> (i8, i8) {
@@ -80,4 +71,15 @@ fn guess(guess: [i8; 4]) -> (i8, i8) {
     }
 
     (bulls, cows)
+}
+
+#[test]
+fn test_guess() {
+    let guess1: [i8; 4] = [1, 2, 3, 4];
+    let guess2: [i8; 4] = [4, 3, 2, 1];
+    let guess3: [i8; 4] = [1, 2, 3, 5];
+
+    debug_assert_eq!(guess(guess1), (4, 0));
+    debug_assert_eq!(guess(guess2), (0, 4));
+    debug_assert_eq!(guess(guess3), (3, 0));
 }
