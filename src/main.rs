@@ -19,13 +19,7 @@ fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
     let cows = guess_results.1;
 
     //TODO: Use the above to modify bulls to bull if singular etc.
-
-    println!(
-        "{} has {} bulls and {} cows",
-        guess.trim(),
-        guess_results.0,
-        guess_results.1
-    );
+    println!("{} has {} bulls and {} cows", guess.trim(), bulls, cows);
 }
 
 fn set_guess(guess: &str) -> Option<[i8; 4]> {
@@ -62,7 +56,7 @@ fn guess(guess: [i8; 4]) -> (i8, i8) {
             continue;
         }
 
-        for (_, &num_value) in number.iter().enumerate() {
+        for &num_value in number.iter() {
             if guess_value == num_value {
                 cows += 1;
                 continue;
