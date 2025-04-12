@@ -7,10 +7,10 @@ fn main() {
     let guess_input = set_guess(&input.trim());
 
     match guess_input {
-        Some(_) => {
+        Ok(_) => {
             print_guess_result(&input, guess(guess_input.unwrap()));
         }
-        None => println!("{} is not 4 digit or a numeral", input.trim()),
+        Err(e) => println!("{e}"),
     }
 }
 
@@ -22,26 +22,28 @@ fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
     println!("{} has {} bulls and {} cows", guess.trim(), bulls, cows);
 }
 
-fn set_guess(guess: &str) -> Option<[i8; 4]> {
+fn set_guess(guess: &str) -> Result<[i8; 4], &str> {
+    let guess = guess.trim();
+
     if guess.len() != 4 {
-        return None;
+        return Err("The number is not of the correct size");
     }
 
     let mut guess_arr = [0; 4];
     for (index, character) in guess.chars().enumerate() {
         if !character.is_numeric() {
-            return None;
+            return Err("The input is not numeric");
         }
         guess_arr[index] = character.to_digit(10).unwrap() as i8;
     }
-    Some(guess_arr)
+    Ok(guess_arr)
 }
 
 #[test]
 fn test_set_guess() {
-    debug_assert_eq!(set_guess("1234"), Some([1, 2, 3, 4]));
-    debug_assert_eq!(set_guess("abcd"), None);
-    debug_assert_eq!(set_guess("1234   "), None);
+    debug_assert_eq!(set_guess("1234"), Ok([1, 2, 3, 4]));
+    debug_assert_eq!(set_guess("1234   "), Ok([1, 2, 3, 4]));
+    debug_assert_eq!(set_guess("abcd"), Err("The input is not numeric"));
 }
 
 fn guess(guess: [i8; 4]) -> (i8, i8) {
