@@ -1,12 +1,14 @@
 use std::io;
 
+const NUM_SIZE: usize = 4;
+
 struct player {
-    number: [i8; 4],
+    number: [i8; NUM_SIZE],
     guesses: Vec<i32>,
 }
 
 impl player {
-    fn new(number: [i8; 4]) -> Self {
+    fn new(number: [i8; NUM_SIZE]) -> Self {
         Self {
             number: number,
             guesses: vec![],
@@ -14,12 +16,12 @@ impl player {
     }
 }
 
-fn validate_number(number: &str) -> Result<[i8; 4], &str> {
-    if number.len() != 4 {
+fn validate_number(number: &str) -> Result<[i8; NUM_SIZE], &str> {
+    if number.len() != NUM_SIZE {
         return Err("The number is not of the correct size");
     }
 
-    let mut guess_arr = [0; 4];
+    let mut guess_arr = [0; NUM_SIZE];
     for (index, character) in number.chars().enumerate() {
         if !character.is_numeric() {
             return Err("The input is not numeric");
@@ -52,7 +54,7 @@ fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
     println!("{} has {} bulls and {} cows", guess.trim(), bulls, cows);
 }
 
-fn set_guess(guess: &str) -> Result<[i8; 4], &str> {
+fn set_guess(guess: &str) -> Result<[i8; NUM_SIZE as usize], &str> {
     let guess = guess.trim();
 
     validate_number(&guess)
@@ -65,8 +67,9 @@ fn test_set_guess() {
     debug_assert_eq!(set_guess("abcd"), Err("The input is not numeric"));
 }
 
-fn guess(guess: [i8; 4]) -> (i8, i8) {
-    let number: [i8; 4] = [1, 2, 3, 4];
+fn guess(guess: [i8; NUM_SIZE]) -> (i8, i8) {
+    //TODO: This needs to go
+    let number: [i8; NUM_SIZE] = [1, 2, 3, 4];
 
     let mut cows: i8 = 0;
     let mut bulls: i8 = 0;
@@ -90,9 +93,9 @@ fn guess(guess: [i8; 4]) -> (i8, i8) {
 
 #[test]
 fn test_guess() {
-    let guess1: [i8; 4] = [1, 2, 3, 4];
-    let guess2: [i8; 4] = [4, 3, 2, 1];
-    let guess3: [i8; 4] = [1, 2, 3, 5];
+    let guess1: [i8; NUM_SIZE] = [1, 2, 3, 4];
+    let guess2: [i8; NUM_SIZE] = [4, 3, 2, 1];
+    let guess3: [i8; NUM_SIZE] = [1, 2, 3, 5];
 
     debug_assert_eq!(guess(guess1), (4, 0));
     debug_assert_eq!(guess(guess2), (0, 4));
