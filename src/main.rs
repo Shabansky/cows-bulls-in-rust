@@ -1,4 +1,34 @@
 use std::io;
+
+struct player {
+    number: [i8; 4],
+    guesses: Vec<i32>,
+}
+
+impl player {
+    fn new(number: [i8; 4]) -> Self {
+        Self {
+            number: number,
+            guesses: vec![],
+        }
+    }
+}
+
+fn validate_number(number: &str) -> Result<[i8; 4], &str> {
+    if number.len() != 4 {
+        return Err("The number is not of the correct size");
+    }
+
+    let mut guess_arr = [0; 4];
+    for (index, character) in number.chars().enumerate() {
+        if !character.is_numeric() {
+            return Err("The input is not numeric");
+        }
+        guess_arr[index] = character.to_digit(10).unwrap() as i8;
+    }
+    Ok(guess_arr)
+}
+
 fn main() {
     let mut input = String::new();
 
@@ -25,18 +55,7 @@ fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
 fn set_guess(guess: &str) -> Result<[i8; 4], &str> {
     let guess = guess.trim();
 
-    if guess.len() != 4 {
-        return Err("The number is not of the correct size");
-    }
-
-    let mut guess_arr = [0; 4];
-    for (index, character) in guess.chars().enumerate() {
-        if !character.is_numeric() {
-            return Err("The input is not numeric");
-        }
-        guess_arr[index] = character.to_digit(10).unwrap() as i8;
-    }
-    Ok(guess_arr)
+    validate_number(&guess)
 }
 
 #[test]
