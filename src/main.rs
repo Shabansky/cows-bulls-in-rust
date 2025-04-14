@@ -2,12 +2,18 @@ use std::io;
 
 const NUM_SIZE: usize = 4;
 
-struct player {
+#[derive(Debug)]
+struct Game {
+    players: Vec<Player>,
+}
+
+#[derive(Debug)]
+struct Player {
     number: [i8; NUM_SIZE],
     guesses: Vec<i32>,
 }
 
-impl player {
+impl Player {
     fn new(number: [i8; NUM_SIZE]) -> Self {
         Self {
             number: number,
@@ -17,6 +23,7 @@ impl player {
 }
 
 fn validate_number(number: &str) -> Result<[i8; NUM_SIZE], &str> {
+    dbg!(number);
     if number.len() != NUM_SIZE {
         return Err("The number is not of the correct size");
     }
@@ -32,6 +39,8 @@ fn validate_number(number: &str) -> Result<[i8; NUM_SIZE], &str> {
 }
 
 fn main() {
+    let game = init_game();
+    println!("{game:#?}");
     let mut input = String::new();
 
     let _ = io::stdin().read_line(&mut input);
@@ -44,6 +53,37 @@ fn main() {
         }
         Err(e) => println!("{e}"),
     }
+}
+
+fn init_game() -> Game {
+    let mut game = Game { players: vec![] };
+    let mut init_players = 0;
+
+    while init_players < 2 {
+        match validate_number("1234") {
+            Ok(number) => {
+                let player = Player::new(number);
+                game.players.push(player);
+                init_players += 1;
+            }
+            Err(e) => println!("{e}"),
+        }
+
+        // let mut input = String::new();
+        // match io::stdin().read_line(&mut input) {
+        //     Ok(_) => match validate_number(&input.trim()) {
+        //         Ok(input) => {
+        //             let player = Player::new(input);
+        //             game.players.push(player);
+        //             init_players += 1;
+        //         }
+        //         Err(e) => println!("Error: {e}"),
+        //     },
+        //     Err(e) => println!("Failed to read line: {}", e),
+        // }
+    }
+
+    game
 }
 
 fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
