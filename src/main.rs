@@ -1,5 +1,9 @@
 use std::io;
 
+mod number;
+
+use number::Number;
+
 const NUM_SIZE: usize = 4;
 
 #[derive(Debug)]
@@ -9,12 +13,12 @@ struct Game {
 
 #[derive(Debug)]
 struct Player {
-    number: [i8; NUM_SIZE],
+    number: Number,
     guesses: Vec<i32>,
 }
 
 impl Player {
-    fn new(number: [i8; NUM_SIZE]) -> Self {
+    fn new(number: Number) -> Self {
         Self {
             number: number,
             guesses: vec![],
@@ -66,7 +70,7 @@ fn init_game() -> Game {
         println!("Please enter Player {} number", init_players);
         let mut input = String::new();
         match io::stdin().read_line(&mut input) {
-            Ok(_) => match validate_number(&input.trim()) {
+            Ok(_) => match Number::from(&input.trim()) {
                 Ok(input) => {
                     let player = Player::new(input);
                     game.players.push(player);
