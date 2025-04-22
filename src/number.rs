@@ -4,10 +4,14 @@ type Num = [i8; NUM_SIZE];
 
 #[derive(Debug)]
 pub struct Number {
-    number: Num,
+    pub number: Num,
 }
 
 impl Number {
+    pub fn new(number: Num) -> Self {
+        Number { number: number }
+    }
+
     pub fn from(text: &str) -> Result<Self, &str> {
         match Self::validate(text) {
             Ok(number) => Ok(Number { number: number }),

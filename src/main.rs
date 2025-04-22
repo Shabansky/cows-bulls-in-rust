@@ -4,8 +4,6 @@ mod number;
 
 use number::Number;
 
-const NUM_SIZE: usize = 4;
-
 #[derive(Debug)]
 struct Game {
     players: Vec<Player>,
@@ -24,24 +22,6 @@ impl Player {
             guesses: vec![],
         }
     }
-}
-
-fn validate_number(number: &str) -> Result<[i8; NUM_SIZE], &str> {
-    dbg!(number);
-    if number.len() != NUM_SIZE {
-        return Err("The number is not of the correct size");
-    }
-
-    //TODO: Ensure non-repeating numbers
-
-    let mut guess_arr = [0; NUM_SIZE];
-    for (index, character) in number.chars().enumerate() {
-        if !character.is_numeric() {
-            return Err("The input is not numeric");
-        }
-        guess_arr[index] = character.to_digit(10).unwrap() as i8;
-    }
-    Ok(guess_arr)
 }
 
 fn main() {
@@ -93,27 +73,27 @@ fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
     println!("{} has {} bulls and {} cows", guess.trim(), bulls, cows);
 }
 
-fn set_guess(guess: &str) -> Result<[i8; NUM_SIZE as usize], &str> {
+fn set_guess(guess: &str) -> Result<Number, &str> {
     let guess = guess.trim();
 
-    validate_number(&guess)
+    Number::from(&guess)
 }
 
 #[test]
 fn test_set_guess() {
-    debug_assert_eq!(set_guess("1234"), Ok([1, 2, 3, 4]));
-    debug_assert_eq!(set_guess("1234   "), Ok([1, 2, 3, 4]));
-    debug_assert_eq!(set_guess("abcd"), Err("The input is not numeric"));
+    debug_assert_eq!(set_guess("1234").is_ok(), true);
+    debug_assert_eq!(set_guess("1234   ").is_ok(), true);
+    debug_assert_eq!(set_guess("abcd").is_err(), true);
 }
 
-fn guess(guess: [i8; NUM_SIZE]) -> (i8, i8) {
+fn guess(guess: Number) -> (i8, i8) {
     //TODO: This needs to go
-    let number: [i8; NUM_SIZE] = [1, 2, 3, 4];
+    let number: [i8; 4] = [1, 2, 3, 4];
 
     let mut cows: i8 = 0;
     let mut bulls: i8 = 0;
 
-    for (guess_column, &guess_value) in guess.iter().enumerate() {
+    for (guess_column, &guess_value) in guess.number.iter().enumerate() {
         if guess_value == number[guess_column] {
             bulls += 1;
             continue;
@@ -132,9 +112,9 @@ fn guess(guess: [i8; NUM_SIZE]) -> (i8, i8) {
 
 #[test]
 fn test_guess() {
-    let guess1: [i8; NUM_SIZE] = [1, 2, 3, 4];
-    let guess2: [i8; NUM_SIZE] = [4, 3, 2, 1];
-    let guess3: [i8; NUM_SIZE] = [1, 2, 3, 5];
+    let guess1: Number = Number::new([1, 2, 3, 4]);
+    let guess2: Number = Number::new([4, 3, 2, 1]);
+    let guess3: Number = Number::new([1, 2, 3, 5]);
 
     debug_assert_eq!(guess(guess1), (4, 0));
     debug_assert_eq!(guess(guess2), (0, 4));
