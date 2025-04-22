@@ -28,6 +28,8 @@ fn validate_number(number: &str) -> Result<[i8; NUM_SIZE], &str> {
         return Err("The number is not of the correct size");
     }
 
+    //TODO: Ensure non-repeating numbers
+
     let mut guess_arr = [0; NUM_SIZE];
     for (index, character) in number.chars().enumerate() {
         if !character.is_numeric() {
@@ -39,6 +41,7 @@ fn validate_number(number: &str) -> Result<[i8; NUM_SIZE], &str> {
 }
 
 fn main() {
+    println!("Welcome to Cows and Bulls!");
     let game = init_game();
     println!("{game:#?}");
     let mut input = String::new();
@@ -57,30 +60,22 @@ fn main() {
 
 fn init_game() -> Game {
     let mut game = Game { players: vec![] };
-    let mut init_players = 0;
+    let mut init_players = 1;
 
-    while init_players < 2 {
-        match validate_number("1234") {
-            Ok(number) => {
-                let player = Player::new(number);
-                game.players.push(player);
-                init_players += 1;
-            }
-            Err(e) => println!("{e}"),
+    while init_players <= 2 {
+        println!("Please enter Player {} number", init_players);
+        let mut input = String::new();
+        match io::stdin().read_line(&mut input) {
+            Ok(_) => match validate_number(&input.trim()) {
+                Ok(input) => {
+                    let player = Player::new(input);
+                    game.players.push(player);
+                    init_players += 1;
+                }
+                Err(e) => println!("Error: {e}"),
+            },
+            Err(e) => println!("Failed to read line: {}", e),
         }
-
-        // let mut input = String::new();
-        // match io::stdin().read_line(&mut input) {
-        //     Ok(_) => match validate_number(&input.trim()) {
-        //         Ok(input) => {
-        //             let player = Player::new(input);
-        //             game.players.push(player);
-        //             init_players += 1;
-        //         }
-        //         Err(e) => println!("Error: {e}"),
-        //     },
-        //     Err(e) => println!("Failed to read line: {}", e),
-        // }
     }
 
     game
