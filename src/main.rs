@@ -77,33 +77,6 @@ fn main() {
     }
 }
 
-fn init_game() -> Game {
-    let mut game = Game {
-        players: vec![],
-        current_player: None,
-    };
-
-    let mut init_players = 1;
-
-    while init_players <= 2 {
-        println!("Please enter Player {} number", init_players);
-        let mut input = String::new();
-        match io::stdin().read_line(&mut input) {
-            Ok(_) => match Number::from(&input.trim()) {
-                Ok(input) => {
-                    let player = Player::new(input);
-                    game.players.push(player);
-                    init_players += 1;
-                }
-                Err(e) => println!("Error: {e}"),
-            },
-            Err(e) => println!("Failed to read line: {}", e),
-        }
-    }
-
-    game
-}
-
 fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
     let bulls = guess_results.0;
     let cows = guess_results.1;
