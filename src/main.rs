@@ -10,6 +10,33 @@ struct Game {
     current_player: Option<Player>,
 }
 
+impl Game {
+    fn new() -> Game {
+        Game {
+            players: vec![],
+            current_player: None,
+        }
+    }
+
+    fn add_player(&mut self) {
+        let mut validated = false;
+        while validated == false {
+            let mut input = String::new();
+            match io::stdin().read_line(&mut input) {
+                Ok(_) => match Number::from(&input.trim()) {
+                    Ok(input) => {
+                        let player = Player::new(input);
+                        self.players.push(player);
+                        validated = true;
+                    }
+                    Err(e) => println!("Error: {e}"),
+                },
+                Err(e) => println!("Failed to read line: {}", e),
+            }
+        }
+    }
+}
+
 #[derive(Debug)]
 struct Player {
     number: Number,
@@ -27,7 +54,11 @@ impl Player {
 
 fn main() {
     println!("Welcome to Cows and Bulls!");
-    let game = init_game();
+    let mut game = Game::new();
+    println!("Please enter Player 1 number");
+    game.add_player();
+    println!("Please enter Player 2 number");
+    game.add_player();
     println!("{game:#?}");
     let mut input = String::new();
 
