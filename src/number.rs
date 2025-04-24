@@ -1,3 +1,5 @@
+use std::collections::HashSet;
+
 const NUM_SIZE: usize = 4;
 
 type Num = [i8; NUM_SIZE];
@@ -24,8 +26,6 @@ impl Number {
             return Err("The number is not of the correct size");
         }
 
-        //TODO: Ensure non-repeating numbers
-
         let mut guess_arr: Num = [0; NUM_SIZE];
         for (index, character) in number.chars().enumerate() {
             if !character.is_numeric() {
@@ -33,6 +33,24 @@ impl Number {
             }
             guess_arr[index] = character.to_digit(10).unwrap() as i8;
         }
+
+        let mut unique_checker: HashSet<i8> = HashSet::new();
+        for value in guess_arr.iter() {
+            unique_checker.insert(*value);
+        }
+
+        if unique_checker.len() != NUM_SIZE {
+            return Err("The number must contain non-repeating digits only");
+        }
+
         Ok(guess_arr)
     }
+}
+
+#[test]
+fn test() {
+    assert_eq!(
+        Number::validate("1111"),
+        Err("The number must contain non-repeating digits only")
+    );
 }
