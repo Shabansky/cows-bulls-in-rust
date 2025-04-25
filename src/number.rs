@@ -39,6 +39,7 @@ impl Number {
             unique_checker.insert(*value);
         }
 
+        //Checking simply against length as HashSet overwrites duplicating values
         if unique_checker.len() != NUM_SIZE {
             return Err("The number must contain non-repeating digits only");
         }
