@@ -1,7 +1,7 @@
 use std::io::stdin;
 
 pub mod player;
-use super::Number;
+use crate::number::Number;
 use player::Player;
 
 #[derive(Debug)]
