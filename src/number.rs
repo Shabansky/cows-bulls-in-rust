@@ -6,7 +6,7 @@ type Num = [i8; NUM_SIZE];
 
 #[derive(Debug)]
 pub struct Number {
-    pub number: Num,
+    number: Num,
 }
 
 impl Number {
@@ -19,6 +19,10 @@ impl Number {
             Ok(number) => Ok(Number { number: number }),
             Err(text) => Err(text),
         }
+    }
+
+    pub fn get(&self) -> Num {
+        self.number
     }
 
     fn validate(number: &str) -> Result<Num, &str> {

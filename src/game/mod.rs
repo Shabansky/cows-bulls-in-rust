@@ -42,13 +42,13 @@ impl Game {
         let mut cows: i8 = 0;
         let mut bulls: i8 = 0;
 
-        for (guess_column, &guess_value) in guess.number.iter().enumerate() {
-            if guess_value == number.number[guess_column] {
+        for (guess_column, &guess_value) in guess.get().iter().enumerate() {
+            if guess_value == number.get()[guess_column] {
                 bulls += 1;
                 continue;
             }
 
-            for &num_value in number.number.iter() {
+            for &num_value in number.get().iter() {
                 if guess_value == num_value {
                     cows += 1;
                     continue;

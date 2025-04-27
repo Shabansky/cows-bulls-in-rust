@@ -54,4 +54,5 @@ fn test_set_guess() {
     debug_assert_eq!(set_guess("1234").is_ok(), true);
     debug_assert_eq!(set_guess("1234   ").is_ok(), true);
     debug_assert_eq!(set_guess("abcd").is_err(), true);
+    debug_assert_eq!(set_guess("abcd").is_err(), true);
 }
