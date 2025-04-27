@@ -25,15 +25,15 @@ fn main() {
     //TODO: This is only for a little while
     let temp_player = game.players.get(0);
 
-    match guess_input {
-        Ok(_) => {
-            print_guess_result(
-                &input,
-                game.guess(guess_input.unwrap(), temp_player.unwrap()),
-            );
-        }
-        Err(e) => println!("{e}"),
-    }
+    // match guess_input {
+    //     Ok(_) => {
+    //         print_guess_result(
+    //             &input,
+    //             game.guess(guess_input.unwrap(), temp_player.unwrap()),
+    //         );
+    //     }
+    //     Err(e) => println!("{e}"),
+    // }
 }
 
 fn print_guess_result(guess: &str, guess_results: (i8, i8)) {

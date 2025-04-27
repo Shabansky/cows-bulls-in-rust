@@ -2,7 +2,10 @@ use std::io::stdin;
 
 pub mod player;
 use crate::number::Number;
+use guess::Guess;
 use player::Player;
+
+pub mod guess;
 
 #[derive(Debug)]
 pub struct Game {
@@ -36,26 +39,12 @@ impl Game {
         }
     }
 
-    pub fn guess(&self, guess: Number, player: &Player) -> (i8, i8) {
+    pub fn guess(&self, guess: Number, player: &Player) {
         let number: &Number = player.get_number();
 
-        let mut cows: i8 = 0;
-        let mut bulls: i8 = 0;
+        let mut guess = Guess::new(guess);
+        guess.process_against(number);
 
-        for (guess_column, &guess_value) in guess.get().iter().enumerate() {
-            if guess_value == number.get()[guess_column] {
-                bulls += 1;
-                continue;
-            }
-
-            for &num_value in number.get().iter() {
-                if guess_value == num_value {
-                    cows += 1;
-                    continue;
-                }
-            }
-        }
-
-        (bulls, cows)
+        //TODO: What should I do with this guess?
     }
 }
