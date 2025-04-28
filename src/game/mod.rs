@@ -10,14 +10,18 @@ pub mod guess;
 #[derive(Debug)]
 pub struct Game {
     pub players: Vec<Player>,
+    is_over: bool,
     current_player: Option<Player>,
+    winning_player: Option<Player>,
 }
 
 impl Game {
     pub fn new() -> Game {
         Game {
             players: vec![],
+            is_over: false,
             current_player: None,
+            winning_player: None,
         }
     }
 
@@ -38,6 +42,8 @@ impl Game {
             }
         }
     }
+
+    pub fn run() {}
 
     pub fn guess(&self, guess: Number, player: &Player) {
         let number: &Number = player.get_number();
