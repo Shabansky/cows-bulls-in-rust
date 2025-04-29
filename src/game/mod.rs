@@ -32,7 +32,9 @@ impl Game {
             match stdin().read_line(&mut input) {
                 Ok(_) => match Number::from(&input.trim()) {
                     Ok(input) => {
-                        let player = Player::new(input);
+                        //TODO: Player name needs to be variable and based on input.
+                        //Needs rework of the add_player() method.
+                        let player = Player::new(String::from("Player"), input);
                         self.players.push(player);
                         validated = true;
                     }
