@@ -20,8 +20,4 @@ fn test_guess() {
     let mut guess3 = Guess::new(number3);
     guess3.process_against(&player_number);
     debug_assert_eq!((guess3.get_bulls(), guess3.get_cows()), (3, 0));
-
-    // debug_assert_eq!(game.guess(guess1, &player), (4, 0));
-    // debug_assert_eq!(game.guess(guess2, &player), (0, 4));
-    // debug_assert_eq!(game.guess(guess3, &player), (3, 0));
 }
