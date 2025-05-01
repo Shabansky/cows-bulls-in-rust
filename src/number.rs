@@ -14,10 +14,10 @@ impl Number {
         Number { number: number }
     }
 
-    pub fn from(text: &str) -> Result<Self, &str> {
+    pub fn from(text: &str) -> Result<Self, String> {
         match Self::validate(text) {
             Ok(number) => Ok(Number { number: number }),
-            Err(text) => Err(text),
+            Err(text) => Err(text.to_string()),
         }
     }
 

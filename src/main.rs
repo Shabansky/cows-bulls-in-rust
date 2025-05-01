@@ -1,4 +1,5 @@
 use std::io;
+use std::io::stdin;
 
 mod number;
 
@@ -11,11 +12,12 @@ use game::Game;
 fn main() {
     println!("Welcome to Cows and Bulls!");
     let mut game = Game::new();
-    println!("Please enter Player 1 number");
-    game.add_player();
-    println!("Please enter Player 2 number");
-    game.add_player();
-    println!("{game:#?}");
+
+    game.add_player(create_new_player_from_input());
+    game.add_player(create_new_player_from_input());
+
+    println!("{:#?}", game);
+
     let mut input = String::new();
 
     let _ = io::stdin().read_line(&mut input);
@@ -36,14 +38,49 @@ fn main() {
     // }
 }
 
-fn print_guess_result(guess: &str, guess_results: (i8, i8)) {
-    let bulls = guess_results.0;
-    let cows = guess_results.1;
-
-    println!("{} has {} bulls and {} cows", guess.trim(), bulls, cows);
+fn get_name_from_input() -> Result<String, String> {
+    println!("Please enter player name");
+    let mut name = String::new();
+    match stdin().read_line(&mut name) {
+        Ok(_) => Ok(name),
+        Err(e) => Err(format!("Error reading input: {}", e)),
+    }
 }
 
-fn set_guess(guess: &str) -> Result<Number, &str> {
+fn get_number_from_input() -> Result<Number, String> {
+    println!("Please enter player number");
+    let mut number = String::new();
+    match stdin().read_line(&mut number) {
+        Ok(_) => Number::from(&number.trim()),
+        Err(e) => Err(format!("Error reading input: {}", e)),
+    }
+}
+
+fn create_new_player_from_input() -> Player {
+    let player_name: String = loop {
+        let name = get_name_from_input();
+
+        if name.is_err() {
+            continue;
+        }
+
+        break name.unwrap();
+    };
+
+    let player_number: Number = loop {
+        let number = get_number_from_input();
+
+        if number.is_err() {
+            continue;
+        }
+
+        break number.unwrap();
+    };
+
+    Player::new(player_name, player_number)
+}
+
+fn set_guess(guess: &str) -> Result<Number, String> {
     let guess = guess.trim();
 
     Number::from(&guess)

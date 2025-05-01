@@ -25,27 +25,27 @@ impl Game {
         }
     }
 
-    pub fn add_player(&mut self) {
-        let mut validated = false;
-        while validated == false {
-            let mut input = String::new();
-            match stdin().read_line(&mut input) {
-                Ok(_) => match Number::from(&input.trim()) {
-                    Ok(input) => {
-                        //TODO: Player name needs to be variable and based on input.
-                        //Needs rework of the add_player() method.
-                        let player = Player::new(String::from("Player"), input);
-                        self.players.push(player);
-                        validated = true;
-                    }
-                    Err(e) => println!("Error: {e}"),
-                },
-                Err(e) => println!("Failed to read line: {}", e),
-            }
-        }
+    pub fn add_player(&mut self, player: Player) {
+        self.players.push(player);
     }
 
-    pub fn run() {}
+    pub fn run(&mut self) {
+        loop {
+            let mut input = String::new();
+            let _ = stdin().read_line(&mut input);
+
+            let number = Number::from(input.trim());
+
+            if number.is_err() {
+                println!("{}", number.unwrap_err());
+                continue;
+            }
+
+            println!("");
+
+            let guess = guess::Guess::new(number.unwrap());
+        }
+    }
 
     pub fn guess(&self, guess: Number, player: &Player) {
         let number: &Number = player.get_number();
