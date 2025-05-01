@@ -56,34 +56,28 @@ fn get_number_from_input() -> Result<Number, String> {
     }
 }
 
+fn create_new_value_from_input<T, F>(mut procedure: F) -> T
+where
+    F: FnMut() -> Result<T, String>,
+{
+    loop {
+        let input = procedure();
+
+        match input {
+            Ok(input) => {
+                break input;
+            }
+            Err(e) => {
+                println!("{}", e);
+                continue;
+            }
+        }
+    }
+}
+
 fn create_new_player_from_input() -> Player {
-    let player_name: String = loop {
-        let name = get_name_from_input();
-
-        match name {
-            Ok(name) => {
-                break name;
-            }
-            Err(e) => {
-                println!("{}", e);
-                continue;
-            }
-        }
-    };
-
-    let player_number: Number = loop {
-        let number = get_number_from_input();
-
-        match number {
-            Ok(number) => {
-                break number;
-            }
-            Err(e) => {
-                println!("{}", e);
-                continue;
-            }
-        }
-    };
+    let player_name = create_new_value_from_input(get_name_from_input);
+    let player_number = create_new_value_from_input(get_number_from_input);
 
     Player::new(player_name, player_number)
 }
