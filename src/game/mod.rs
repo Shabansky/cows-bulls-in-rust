@@ -11,7 +11,7 @@ pub mod guess;
 pub struct Game {
     pub players: Vec<Player>,
     is_over: bool,
-    current_player: Option<Player>,
+    current_player: usize,
     winning_player: Option<Player>,
 }
 
@@ -20,7 +20,7 @@ impl Game {
         Game {
             players: vec![],
             is_over: false,
-            current_player: None,
+            current_player: 0,
             winning_player: None,
         }
     }
