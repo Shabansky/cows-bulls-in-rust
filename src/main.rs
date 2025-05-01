@@ -60,21 +60,29 @@ fn create_new_player_from_input() -> Player {
     let player_name: String = loop {
         let name = get_name_from_input();
 
-        if name.is_err() {
-            continue;
+        match name {
+            Ok(name) => {
+                break name;
+            }
+            Err(e) => {
+                println!("{}", e);
+                continue;
+            }
         }
-
-        break name.unwrap();
     };
 
     let player_number: Number = loop {
         let number = get_number_from_input();
 
-        if number.is_err() {
-            continue;
+        match number {
+            Ok(number) => {
+                break number;
+            }
+            Err(e) => {
+                println!("{}", e);
+                continue;
+            }
         }
-
-        break number.unwrap();
     };
 
     Player::new(player_name, player_number)
