@@ -3,22 +3,16 @@ use std::io::stdin;
 use crate::game::player::Player;
 use crate::number::Number;
 
-fn get_name_from_input() -> Result<String, String> {
-    println!("Please enter player name");
-    let mut name = String::new();
-    match stdin().read_line(&mut name) {
-        Ok(_) => Ok(name),
+fn get_input_as_string() -> Result<String, String> {
+    let mut input = String::new();
+    match stdin().read_line(&mut input) {
+        Ok(_) => Ok(input.trim().to_string()),
         Err(e) => Err(format!("Error reading input: {}", e)),
     }
 }
 
-fn get_number_from_input() -> Result<Number, String> {
-    println!("Please enter player number");
-    let mut number = String::new();
-    match stdin().read_line(&mut number) {
-        Ok(_) => Number::from(&number.trim()),
-        Err(e) => Err(format!("Error reading input: {}", e)),
-    }
+fn get_number_from_input(number: &str) -> Result<Number, String> {
+    Number::from(&number)
 }
 
 fn create_new_value_from_input<T, F>(mut procedure: F) -> T
@@ -41,8 +35,15 @@ where
 }
 
 pub fn create_new_player_from_input() -> Player {
-    let player_name = create_new_value_from_input(get_name_from_input);
-    let player_number = create_new_value_from_input(get_number_from_input);
+    let player_name = create_new_value_from_input(|| {
+        println!("Please enter player name");
+        get_input_as_string()
+    });
+    let player_number = create_new_value_from_input(|| {
+        println!("Please enter player number");
+        let number = get_input_as_string()?;
+        get_number_from_input(&number)
+    });
 
     Player::new(player_name, player_number)
 }
