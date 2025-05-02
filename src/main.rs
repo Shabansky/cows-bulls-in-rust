@@ -1,5 +1,3 @@
-use std::io;
-
 mod number;
 
 use number::Number;
@@ -17,25 +15,6 @@ fn main() {
     game.add_player(create_new_player_from_input());
 
     println!("{:#?}", game);
-
-    let mut input = String::new();
-
-    let _ = io::stdin().read_line(&mut input);
-
-    let guess_input = set_guess(&input.trim());
-
-    //TODO: This is only for a little while
-    let temp_player = game.players.get(0);
-
-    // match guess_input {
-    //     Ok(_) => {
-    //         print_guess_result(
-    //             &input,
-    //             game.guess(guess_input.unwrap(), temp_player.unwrap()),
-    //         );
-    //     }
-    //     Err(e) => println!("{e}"),
-    // }
 }
 
 fn set_guess(guess: &str) -> Result<Number, String> {
