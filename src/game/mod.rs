@@ -29,6 +29,18 @@ impl Game {
         self.players.push(player);
     }
 
+    fn switch_current_player(&mut self) {
+        if self.players.is_empty() {
+            return;
+        }
+
+        self.current_player = (self.current_player + 1) % self.players.len()
+    }
+
+    fn get_current_player(&self) -> &Player {
+        &self.players[self.current_player]
+    }
+
     pub fn run(&mut self) {
         loop {
             let mut input = String::new();
@@ -80,5 +92,28 @@ pub mod tests {
         new_game.add_player(player);
 
         assert_eq!(1, new_game.players.iter().count());
+    }
+
+    #[test]
+    fn switching_current_player_points_to_different_player() {
+        let mut new_game = Game::new();
+        let player = Player::new(String::from("Player 1"), Number::new([1, 2, 3, 4]));
+        new_game.add_player(player);
+        let player = Player::new(String::from("Player 2"), Number::new([1, 2, 3, 4]));
+        new_game.add_player(player);
+
+        assert_eq!("Player 1", new_game.get_current_player().get_name());
+        new_game.switch_current_player();
+        assert_eq!("Player 2", new_game.get_current_player().get_name());
+        new_game.switch_current_player();
+        assert_eq!("Player 1", new_game.get_current_player().get_name());
+    }
+
+    #[test]
+    fn switching_current_player_when_no_players() {
+        let mut new_game = Game::new();
+        assert_eq!(0, new_game.current_player);
+        new_game.switch_current_player();
+        assert_eq!(0, new_game.current_player);
     }
 }

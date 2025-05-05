@@ -19,4 +19,8 @@ impl Player {
     pub fn get_number(&self) -> &Number {
         &self.number
     }
+
+    pub fn get_name(&self) -> &String {
+        &self.name
+    }
 }
