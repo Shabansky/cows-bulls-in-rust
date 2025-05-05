@@ -3,6 +3,7 @@ type Bulls = usize;
 
 use crate::number::Number;
 
+#[derive(Debug)]
 pub struct Guess {
     number: Number,
     cows: Cows,

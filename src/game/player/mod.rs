@@ -1,10 +1,10 @@
-use super::Number;
+use super::{guess::Guess, Number};
 
 #[derive(Debug)]
 pub struct Player {
     name: String,
     number: Number,
-    guesses: Vec<i32>,
+    guesses: Vec<Guess>,
 }
 
 impl Player {
@@ -22,5 +22,9 @@ impl Player {
 
     pub fn get_name(&self) -> &String {
         &self.name
+    }
+
+    pub fn add_guess(&mut self, guess: Guess) {
+        self.guesses.push(guess);
     }
 }

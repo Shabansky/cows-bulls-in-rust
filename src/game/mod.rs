@@ -1,5 +1,3 @@
-use std::io::stdin;
-
 pub mod player;
 use crate::number::Number;
 use guess::Guess;
@@ -37,8 +35,8 @@ impl Game {
         self.current_player = (self.current_player + 1) % self.players.len()
     }
 
-    fn get_current_player(&self) -> &Player {
-        &self.players[self.current_player]
+    fn get_current_player(&mut self) -> &mut Player {
+        &mut self.players[self.current_player]
     }
 
     pub fn run(&mut self) {
@@ -49,13 +47,17 @@ impl Game {
         }
     }
 
-    pub fn guess(&self, guess: Number, player: &Player) {
+    pub fn guess(&mut self, guess: Number, player: &Player) {
         let number: &Number = player.get_number();
 
         let mut guess = Guess::new(guess);
         guess.process_against(number);
 
-        //TODO: What should I do with this guess?
+        if guess.is_match() {
+            self.is_over = true;
+        }
+
+        self.get_current_player().add_guess(guess);
     }
 }
 
@@ -105,5 +107,19 @@ pub mod tests {
         assert_eq!(0, new_game.current_player);
         new_game.switch_current_player();
         assert_eq!(0, new_game.current_player);
+    }
+
+    #[test]
+    fn number_match_leads_to_game_end() {
+        let mut new_game = Game::new();
+
+        let player = Player::new(String::from("Player 1"), Number::new([1, 2, 3, 4]));
+        new_game.add_player(player);
+        let target_player = Player::new(String::from("Player 2"), Number::new([4, 3, 2, 1]));
+
+        assert!(!new_game.is_over);
+        new_game.guess(Number::new([4, 3, 2, 1]), &target_player);
+
+        assert!(new_game.is_over);
     }
 }
