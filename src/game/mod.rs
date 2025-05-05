@@ -43,19 +43,9 @@ impl Game {
 
     pub fn run(&mut self) {
         loop {
-            let mut input = String::new();
-            let _ = stdin().read_line(&mut input);
-
-            let number = Number::from(input.trim());
-
-            if number.is_err() {
-                println!("{}", number.unwrap_err());
-                continue;
+            if self.is_over == true {
+                return;
             }
-
-            println!("");
-
-            let guess = guess::Guess::new(number.unwrap());
         }
     }
 
