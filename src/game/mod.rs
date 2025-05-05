@@ -45,6 +45,7 @@ impl Game {
 
             let guess = guess::Guess::new(number.unwrap());
         }
+
     }
 
     pub fn guess(&self, guess: Number, player: &Player) {
