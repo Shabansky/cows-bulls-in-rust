@@ -39,6 +39,16 @@ impl Game {
         &mut self.players[self.current_player]
     }
 
+    fn get_opponent_players(&mut self) -> Vec<&Player> {
+        //TODO: Consider whether cloning is the best approach here
+        let current_player_name = self.get_current_player().get_name().clone();
+
+        self.players
+            .iter()
+            .filter(|player| *player.get_name() != current_player_name)
+            .collect()
+    }
+
     pub fn run(&mut self) {
         loop {
             if self.is_over == true {
@@ -121,5 +131,26 @@ pub mod tests {
         new_game.guess(Number::new([4, 3, 2, 1]), &target_player);
 
         assert!(new_game.is_over);
+    }
+
+    #[test]
+    fn other_player_is_correct_player() {
+        let mut new_game = Game::new();
+
+        let player = Player::new(String::from("Player 1"), Number::new([1, 2, 3, 4]));
+        new_game.add_player(player);
+        let player = Player::new(String::from("Player 2"), Number::new([1, 2, 3, 4]));
+        new_game.add_player(player);
+
+        let other_players = new_game.get_opponent_players();
+
+        assert_eq!(1, other_players.len());
+        assert_eq!(&String::from("Player 2"), other_players[0].get_name());
+
+        new_game.switch_current_player();
+        let other_players = new_game.get_opponent_players();
+
+        assert_eq!(1, other_players.len());
+        assert_eq!(&String::from("Player 1"), other_players[0].get_name());
     }
 }
