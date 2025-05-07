@@ -1,8 +1,8 @@
 pub mod player;
+use crate::input_helper::create_number_from_input;
 use crate::number::Number;
 use guess::Guess;
 use player::Player;
-
 pub mod guess;
 
 #[derive(Debug)]
@@ -35,12 +35,16 @@ impl Game {
         self.current_player = (self.current_player + 1) % self.players.len()
     }
 
-    fn get_current_player(&mut self) -> &mut Player {
+    fn get_current_player(&self) -> &Player {
+        &self.players[self.current_player]
+    }
+
+    fn get_current_player_mut(&mut self) -> &mut Player {
         &mut self.players[self.current_player]
     }
 
-    fn get_opponent_players(&mut self) -> Vec<&Player> {
-        //TODO: Consider whether cloning is the best approach here
+    //TODO: Consider whether cloning is the best approach here
+    fn get_opponent_players(&self) -> Vec<&Player> {
         let current_player_name = self.get_current_player().get_name().clone();
 
         self.players
@@ -51,23 +55,31 @@ impl Game {
 
     pub fn run(&mut self) {
         loop {
+            println!("Guess!");
+
+            let guess_number = create_number_from_input();
+
+            self.guess(guess_number);
+
             if self.is_over == true {
                 return;
             }
+
+            self.switch_current_player();
         }
     }
 
-    pub fn guess(&mut self, guess: Number, player: &Player) {
-        let number: &Number = player.get_number();
-
+    pub fn guess(&mut self, guess: Number) {
         let mut guess = Guess::new(guess);
-        guess.process_against(number);
+        //TODO: Naive assumption that there is an opponent. TEMP!
+        let opponent_number = self.get_opponent_players()[0].get_number();
+        guess.process_against(opponent_number);
 
         if guess.is_match() {
             self.is_over = true;
         }
 
-        self.get_current_player().add_guess(guess);
+        self.get_current_player_mut().add_guess(guess);
     }
 }
 
@@ -126,9 +138,10 @@ pub mod tests {
         let player = Player::new(String::from("Player 1"), Number::new([1, 2, 3, 4]));
         new_game.add_player(player);
         let target_player = Player::new(String::from("Player 2"), Number::new([4, 3, 2, 1]));
+        new_game.add_player(target_player);
 
         assert!(!new_game.is_over);
-        new_game.guess(Number::new([4, 3, 2, 1]), &target_player);
+        new_game.guess(Number::new([4, 3, 2, 1]));
 
         assert!(new_game.is_over);
     }

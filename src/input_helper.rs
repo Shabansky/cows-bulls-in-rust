@@ -34,6 +34,13 @@ where
     }
 }
 
+pub fn create_number_from_input() -> Number {
+    create_new_value_from_input(|| {
+        let number = get_input_as_string()?;
+        get_number_from_input(&number)
+    })
+}
+
 pub fn create_new_player_from_input() -> Player {
     let player_name = create_new_value_from_input(|| {
         println!("Please enter player name");

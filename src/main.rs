@@ -14,5 +14,7 @@ fn main() {
     game.add_player(create_new_player_from_input());
     game.add_player(create_new_player_from_input());
 
-    println!("{:#?}", game);
+    game.run();
+
+    println!("Game over!");
 }
