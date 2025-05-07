@@ -55,7 +55,7 @@ impl Game {
 
     pub fn run(&mut self) {
         loop {
-            println!("Guess!");
+            println!("Player {} Guess!", self.get_current_player().get_name());
 
             let guess_number = create_number_from_input();
 
@@ -74,6 +74,8 @@ impl Game {
         //TODO: Naive assumption that there is an opponent. TEMP!
         let opponent_number = self.get_opponent_players()[0].get_number();
         guess.process_against(opponent_number);
+
+        println!("{}", guess.print());
 
         if guess.is_match() {
             self.is_over = true;

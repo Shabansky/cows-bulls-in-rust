@@ -25,6 +25,10 @@ impl Number {
         self.number
     }
 
+    pub fn to_string(&self) -> String {
+        self.number.iter().map(|c| c.to_string()).collect()
+    }
+
     fn validate(number: &str) -> Result<Num, &str> {
         if number.len() != NUM_SIZE {
             return Err("The number is not of the correct size");

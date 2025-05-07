@@ -46,6 +46,15 @@ impl Guess {
     pub fn is_match(&self) -> bool {
         self.bulls == self.number.get().len()
     }
+
+    pub fn print(&self) -> String {
+        format!(
+            "Guess {} has {} bulls and {} cows",
+            self.number.to_string(),
+            self.bulls,
+            self.cows
+        )
+    }
 }
 
 #[cfg(test)]
