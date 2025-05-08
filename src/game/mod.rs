@@ -1,5 +1,5 @@
 pub mod player;
-use crate::input_helper::create_number_from_input;
+
 use crate::number::Number;
 use guess::Guess;
 use player::Player;
@@ -35,11 +35,11 @@ impl Game {
         self.current_player = (self.current_player + 1) % self.players.len()
     }
 
-    fn get_current_player(&self) -> &Player {
+    pub fn get_current_player(&self) -> &Player {
         &self.players[self.current_player]
     }
 
-    fn get_current_player_mut(&mut self) -> &mut Player {
+    pub fn get_current_player_mut(&mut self) -> &mut Player {
         &mut self.players[self.current_player]
     }
 
@@ -53,11 +53,26 @@ impl Game {
             .collect()
     }
 
-    pub fn run(&mut self) {
-        loop {
-            println!("Player {} Guess!", self.get_current_player().get_name());
+    // fn boot(&mut self) -> Result<(), String> {
+    //     /**Responsibilities
+    //      * Responsibilities:
+    //      * - Define the current player (first one by default)
+    //      * - Define the target player
+    //      *
+    //      *
+    //      * */
+    //     //Invariance 1 - at least two players
+    //     //Invariance 2 - current player always different from target player
+    //     Ok(())
+    // }
 
-            let guess_number = create_number_from_input();
+    //TODO: Maybe consider an output_closure for whenever the game is over. Instead of a simple return.
+    pub fn run<F>(&mut self, input_closure: F)
+    where
+        F: Fn(&Self) -> Number,
+    {
+        loop {
+            let guess_number = input_closure(&self);
 
             self.guess(guess_number);
 
