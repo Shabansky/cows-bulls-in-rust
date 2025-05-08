@@ -66,10 +66,10 @@ impl Game {
     //     Ok(())
     // }
 
-    //TODO: Maybe consider an output_closure for whenever the game is over. Instead of a simple return.
-    pub fn run<F>(&mut self, input_closure: F)
+    pub fn run<F, G>(&mut self, input_closure: F, game_over_closure: G)
     where
         F: Fn(&Self) -> Number,
+        G: Fn(&Self) -> (),
     {
         loop {
             let guess_number = input_closure(&self);
@@ -77,6 +77,7 @@ impl Game {
             self.guess(guess_number);
 
             if self.is_over == true {
+                game_over_closure(&self);
                 return;
             }
 

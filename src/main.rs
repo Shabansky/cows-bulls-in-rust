@@ -14,12 +14,15 @@ fn main() {
     game.add_player(create_new_player_from_input());
     game.add_player(create_new_player_from_input());
 
-    game.run(|game| {
-        let current_player_name = game.get_current_player().get_name().to_string();
-        println!("Player {} Guess!", current_player_name);
+    game.run(
+        |game| {
+            let current_player_name = game.get_current_player().get_name().to_string();
+            println!("Player {} Guess!", current_player_name);
 
-        create_number_from_input()
-    });
-
-    println!("Game over!");
+            create_number_from_input()
+        },
+        |_| {
+            println!("Game over!");
+        },
+    );
 }
