@@ -43,13 +43,12 @@ impl Game {
         &mut self.players[self.current_player]
     }
 
-    //TODO: Consider whether cloning is the best approach here
     fn get_opponent_players(&self) -> Vec<&Player> {
-        let current_player_name = self.get_current_player().get_name().clone();
+        let current_player_name = self.get_current_player().get_name();
 
         self.players
             .iter()
-            .filter(|player| *player.get_name() != current_player_name)
+            .filter(|player| player.get_name() != current_player_name)
             .collect()
     }
 
