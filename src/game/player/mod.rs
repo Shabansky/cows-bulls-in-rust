@@ -10,8 +10,8 @@ pub struct Player {
 impl Player {
     pub fn new(name: String, number: Number) -> Self {
         Self {
-            name: name,
-            number: number,
+            name,
+            number,
             guesses: vec![],
         }
     }

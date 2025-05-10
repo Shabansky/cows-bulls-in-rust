@@ -10,6 +10,7 @@ pub struct Game {
     pub players: Vec<Player>,
     is_over: bool,
     current_player: usize,
+    target_player: usize,
     winning_player: usize,
 }
 
@@ -19,6 +20,7 @@ impl Game {
             players: vec![],
             is_over: false,
             current_player: 0,
+            target_player: 0,
             winning_player: 0,
         }
     }
@@ -71,12 +73,12 @@ impl Game {
         G: Fn(&Self) -> (),
     {
         loop {
-            let guess_number = input_closure(&self);
+            let guess_number = input_closure(self);
 
             self.guess(guess_number);
 
             if self.is_over == true {
-                game_over_closure(&self);
+                game_over_closure(self);
                 return;
             }
 
@@ -90,7 +92,12 @@ impl Game {
         let opponent_number = self.get_opponent_players()[0].get_number();
         guess.process_against(opponent_number);
 
-        println!("{}", guess.print());
+        println!(
+            "Guess with number {} has {} bulls and {} cows",
+            guess.get_number().to_string(),
+            guess.get_bulls(),
+            guess.get_cows()
+        );
 
         if guess.is_match() {
             self.is_over = true;
