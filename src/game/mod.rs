@@ -1,3 +1,5 @@
+use std::default::Default;
+
 pub mod player;
 
 use crate::number::Number;
@@ -70,14 +72,14 @@ impl Game {
     pub fn run<F, G>(&mut self, input_closure: F, game_over_closure: G)
     where
         F: Fn(&Self) -> Number,
-        G: Fn(&Self) -> (),
+        G: Fn(&Self),
     {
         loop {
             let guess_number = input_closure(self);
 
             self.guess(guess_number);
 
-            if self.is_over == true {
+            if self.is_over {
                 game_over_closure(self);
                 return;
             }
@@ -104,6 +106,12 @@ impl Game {
         }
 
         self.get_current_player_mut().add_guess(guess);
+    }
+}
+
+impl Default for Game {
+    fn default() -> Self {
+        Self::new()
     }
 }
 

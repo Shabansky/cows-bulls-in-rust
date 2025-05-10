@@ -12,7 +12,7 @@ fn get_input_as_string() -> Result<String, String> {
 }
 
 fn get_number_from_input(number: &str) -> Result<Number, String> {
-    Number::from(&number)
+    Number::from(number)
 }
 
 fn create_new_value_from_input<T, F>(mut procedure: F) -> T

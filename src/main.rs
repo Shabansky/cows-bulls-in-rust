@@ -8,7 +8,7 @@ use game::Game;
 
 fn main() {
     println!("Welcome to Cows and Bulls!");
-    let mut game = Game::new();
+    let mut game = Game::default();
 
     //TODO: Iterate these based on a player_count settings
     game.add_player(create_new_player_from_input());

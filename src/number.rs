@@ -12,22 +12,18 @@ pub struct Number {
 
 impl Number {
     pub fn new(number: Num) -> Self {
-        Number { number: number }
+        Number { number }
     }
 
     pub fn from(text: &str) -> Result<Self, String> {
         match Self::validate(text) {
-            Ok(number) => Ok(Number { number: number }),
+            Ok(number) => Ok(Self::new(number)),
             Err(text) => Err(text.to_string()),
         }
     }
 
     pub fn get(&self) -> Num {
         self.number
-    }
-
-    pub fn to_string(&self) -> String {
-        self.number.iter().map(|c| c.to_string()).collect()
     }
 
     fn validate(number: &str) -> Result<Num, &str> {
@@ -59,7 +55,14 @@ impl Number {
 
 impl Display for Number {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.to_string())
+        write!(
+            f,
+            "{}",
+            self.number
+                .iter()
+                .map(|c| c.to_string())
+                .collect::<String>()
+        )
     }
 }
 
