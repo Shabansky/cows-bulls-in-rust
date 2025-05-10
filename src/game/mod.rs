@@ -94,7 +94,7 @@ impl Game {
 
         println!(
             "Guess with number {} has {} bulls and {} cows",
-            guess.get_number().to_string(),
+            guess.get_number(),
             guess.get_bulls(),
             guess.get_cows()
         );

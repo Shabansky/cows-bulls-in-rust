@@ -1,4 +1,5 @@
 use std::collections::HashSet;
+use std::fmt::{Display, Formatter};
 
 const NUM_SIZE: usize = 4;
 
@@ -53,6 +54,12 @@ impl Number {
         }
 
         Ok(guess_arr)
+    }
+}
+
+impl Display for Number {
+    fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.to_string())
     }
 }
 
