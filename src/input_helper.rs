@@ -2,6 +2,7 @@ use std::io::stdin;
 
 use crate::game::player::Player;
 use crate::number::Number;
+use crate::number::NumberError;
 
 fn get_input_as_string() -> Result<String, String> {
     let mut input = String::new();
@@ -12,7 +13,16 @@ fn get_input_as_string() -> Result<String, String> {
 }
 
 fn get_number_from_input(number: &str) -> Result<Number, String> {
-    Number::from(number)
+    match Number::from(number) {
+        Err(NumberError::NotCorrectSize) => {
+            Err(String::from("The number is not of the correct size"))
+        }
+        Err(NumberError::NotNumeric) => Err(String::from("The input is not numeric")),
+        Err(NumberError::RepeatingNumbers) => Err(String::from(
+            "The number must contain non-repeating digits only",
+        )),
+        Ok(num) => Ok(num),
+    }
 }
 
 fn create_new_value_from_input<T, F>(mut procedure: F) -> T

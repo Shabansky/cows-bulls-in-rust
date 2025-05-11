@@ -5,6 +5,13 @@ const NUM_SIZE: usize = 4;
 
 type Num = [i8; NUM_SIZE];
 
+#[derive(Debug, PartialEq)]
+pub enum NumberError {
+    NotCorrectSize,
+    NotNumeric,
+    RepeatingNumbers,
+}
+
 #[derive(Debug)]
 pub struct Number {
     number: Num,
@@ -15,10 +22,10 @@ impl Number {
         Number { number }
     }
 
-    pub fn from(text: &str) -> Result<Self, String> {
+    pub fn from(text: &str) -> Result<Self, NumberError> {
         match Self::validate(text) {
             Ok(number) => Ok(Self::new(number)),
-            Err(text) => Err(text.to_string()),
+            Err(text) => Err(text),
         }
     }
 
@@ -26,15 +33,15 @@ impl Number {
         self.number
     }
 
-    fn validate(number: &str) -> Result<Num, &str> {
+    fn validate(number: &str) -> Result<Num, NumberError> {
         if number.len() != NUM_SIZE {
-            return Err("The number is not of the correct size");
+            return Err(NumberError::NotCorrectSize);
         }
 
         let mut guess_arr: Num = [0; NUM_SIZE];
         for (index, character) in number.chars().enumerate() {
             if !character.is_numeric() {
-                return Err("The input is not numeric");
+                return Err(NumberError::NotNumeric);
             }
             guess_arr[index] = character.to_digit(10).unwrap() as i8;
         }
@@ -46,7 +53,7 @@ impl Number {
 
         //Checking simply against length as HashSet overwrites duplicating values
         if unique_checker.len() != NUM_SIZE {
-            return Err("The number must contain non-repeating digits only");
+            return Err(NumberError::RepeatingNumbers);
         }
 
         Ok(guess_arr)
@@ -68,8 +75,5 @@ impl Display for Number {
 
 #[test]
 fn test() {
-    assert_eq!(
-        Number::validate("1111"),
-        Err("The number must contain non-repeating digits only")
-    );
+    assert_eq!(Number::validate("1111"), Err(NumberError::RepeatingNumbers));
 }
