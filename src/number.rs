@@ -1,6 +1,7 @@
 use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
 
+//TODO: This will need to be dependent on settings at some point.
 const NUM_SIZE: usize = 4;
 
 type Num = [i8; NUM_SIZE];
@@ -25,7 +26,7 @@ impl Number {
     pub fn from(text: &str) -> Result<Self, NumberError> {
         match Self::validate(text) {
             Ok(number) => Ok(Self::new(number)),
-            Err(text) => Err(text),
+            Err(err) => Err(err),
         }
     }
 
@@ -74,6 +75,10 @@ impl Display for Number {
 }
 
 #[test]
-fn test() {
+fn validation_catches_cases() {
+    assert_eq!(Number::validate("123"), Err(NumberError::NotCorrectSize));
+    assert_eq!(Number::validate(""), Err(NumberError::NotCorrectSize));
+    assert_eq!(Number::validate("12345678901234567890"), Err(NumberError::NotCorrectSize));
+    assert_eq!(Number::validate("nota"), Err(NumberError::NotNumeric));
     assert_eq!(Number::validate("1111"), Err(NumberError::RepeatingNumbers));
 }
