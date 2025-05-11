@@ -1,7 +1,5 @@
 // pub mod player;
 
-use crate::number::Number;
-
 use super::player::Player;
 
 #[derive(Debug)]
@@ -62,6 +60,7 @@ impl Default for PlayerController {
 #[cfg(test)]
 pub mod tests {
     use super::*;
+    use crate::number::Number;
 
     #[test]
     fn new_controller_has_correct_starting_settings() {
