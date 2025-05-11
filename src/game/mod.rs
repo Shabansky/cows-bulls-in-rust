@@ -7,53 +7,29 @@ use guess::Guess;
 use player::Player;
 pub mod guess;
 
+mod player_controller;
+use player_controller::PlayerController;
+
 #[derive(Debug)]
 pub struct Game {
-    pub players: Vec<Player>,
+    player_controller: PlayerController,
     is_over: bool,
-    current_player: usize,
-    target_player: usize,
-    winning_player: usize,
 }
 
 impl Game {
     pub fn new() -> Game {
         Game {
-            players: vec![],
+            player_controller: PlayerController::new(),
             is_over: false,
-            current_player: 0,
-            target_player: 0,
-            winning_player: 0,
         }
     }
 
     pub fn add_player(&mut self, player: Player) {
-        self.players.push(player);
-    }
-
-    fn switch_current_player(&mut self) {
-        if self.players.is_empty() {
-            return;
-        }
-
-        self.current_player = (self.current_player + 1) % self.players.len()
+        self.player_controller.add_player(player);
     }
 
     pub fn get_current_player(&self) -> &Player {
-        &self.players[self.current_player]
-    }
-
-    pub fn get_current_player_mut(&mut self) -> &mut Player {
-        &mut self.players[self.current_player]
-    }
-
-    fn get_opponent_players(&self) -> Vec<&Player> {
-        let current_player_name = self.get_current_player().get_name();
-
-        self.players
-            .iter()
-            .filter(|player| player.get_name() != current_player_name)
-            .collect()
+        self.player_controller.get_current_player()
     }
 
     // fn boot(&mut self) -> Result<(), String> {
@@ -84,14 +60,14 @@ impl Game {
                 return;
             }
 
-            self.switch_current_player();
+            self.player_controller.switch_current_player();
         }
     }
 
     pub fn guess(&mut self, guess: Number) {
         let mut guess = Guess::new(guess);
         //TODO: Naive assumption that there is an opponent. TEMP!
-        let opponent_number = self.get_opponent_players()[0].get_number();
+        let opponent_number = self.player_controller.get_opponent_players()[0].get_number();
         guess.process_against(opponent_number);
 
         println!(
@@ -105,7 +81,9 @@ impl Game {
             self.is_over = true;
         }
 
-        self.get_current_player_mut().add_guess(guess);
+        self.player_controller
+            .get_current_player_mut()
+            .add_guess(guess);
     }
 }
 
@@ -123,44 +101,7 @@ pub mod tests {
     fn new_game_has_correct_starting_settings() {
         let new_game = Game::new();
 
-        assert_eq!(0, new_game.players.iter().count());
         assert_eq!(false, new_game.is_over);
-        assert_eq!(0, new_game.current_player);
-        assert_eq!(0, new_game.winning_player);
-    }
-
-    #[test]
-    fn add_player_updates_game_players_count() {
-        let mut new_game = Game::new();
-
-        assert_eq!(0, new_game.players.iter().count());
-        let player = Player::new(String::from("Player"), Number::new([1, 2, 3, 4]));
-        new_game.add_player(player);
-
-        assert_eq!(1, new_game.players.iter().count());
-    }
-
-    #[test]
-    fn switching_current_player_points_to_different_player() {
-        let mut new_game = Game::new();
-        let player = Player::new(String::from("Player 1"), Number::new([1, 2, 3, 4]));
-        new_game.add_player(player);
-        let player = Player::new(String::from("Player 2"), Number::new([1, 2, 3, 4]));
-        new_game.add_player(player);
-
-        assert_eq!("Player 1", new_game.get_current_player().get_name());
-        new_game.switch_current_player();
-        assert_eq!("Player 2", new_game.get_current_player().get_name());
-        new_game.switch_current_player();
-        assert_eq!("Player 1", new_game.get_current_player().get_name());
-    }
-
-    #[test]
-    fn switching_current_player_when_no_players() {
-        let mut new_game = Game::new();
-        assert_eq!(0, new_game.current_player);
-        new_game.switch_current_player();
-        assert_eq!(0, new_game.current_player);
     }
 
     #[test]
@@ -176,26 +117,5 @@ pub mod tests {
         new_game.guess(Number::new([4, 3, 2, 1]));
 
         assert!(new_game.is_over);
-    }
-
-    #[test]
-    fn other_player_is_correct_player() {
-        let mut new_game = Game::new();
-
-        let player = Player::new(String::from("Player 1"), Number::new([1, 2, 3, 4]));
-        new_game.add_player(player);
-        let player = Player::new(String::from("Player 2"), Number::new([1, 2, 3, 4]));
-        new_game.add_player(player);
-
-        let other_players = new_game.get_opponent_players();
-
-        assert_eq!(1, other_players.len());
-        assert_eq!(&String::from("Player 2"), other_players[0].get_name());
-
-        new_game.switch_current_player();
-        let other_players = new_game.get_opponent_players();
-
-        assert_eq!(1, other_players.len());
-        assert_eq!(&String::from("Player 1"), other_players[0].get_name());
     }
 }
