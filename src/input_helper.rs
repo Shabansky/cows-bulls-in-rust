@@ -21,6 +21,9 @@ fn get_number_from_input(number: &str) -> Result<Number, String> {
         Err(NumberError::RepeatingNumbers) => Err(String::from(
             "The number must contain non-repeating digits only",
         )),
+        Err(NumberError::FirstDigitZero) => {
+            Err(String::from("The number cannot start with a zero"))
+        }
         Ok(num) => Ok(num),
     }
 }

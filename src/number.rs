@@ -11,6 +11,7 @@ pub enum NumberError {
     NotCorrectSize,
     NotNumeric,
     RepeatingNumbers,
+    FirstDigitZero,
 }
 
 #[derive(Debug)]
@@ -57,6 +58,10 @@ impl Number {
             return Err(NumberError::RepeatingNumbers);
         }
 
+        if guess_arr[0] == 0 {
+            return Err(NumberError::FirstDigitZero);
+        }
+
         Ok(guess_arr)
     }
 }
@@ -78,7 +83,11 @@ impl Display for Number {
 fn validation_catches_cases() {
     assert_eq!(Number::validate("123"), Err(NumberError::NotCorrectSize));
     assert_eq!(Number::validate(""), Err(NumberError::NotCorrectSize));
-    assert_eq!(Number::validate("12345678901234567890"), Err(NumberError::NotCorrectSize));
+    assert_eq!(
+        Number::validate("12345678901234567890"),
+        Err(NumberError::NotCorrectSize)
+    );
     assert_eq!(Number::validate("nota"), Err(NumberError::NotNumeric));
     assert_eq!(Number::validate("1111"), Err(NumberError::RepeatingNumbers));
+    assert_eq!(Number::validate("0123"), Err(NumberError::FirstDigitZero));
 }
