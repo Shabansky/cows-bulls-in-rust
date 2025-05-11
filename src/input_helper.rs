@@ -2,7 +2,7 @@ use std::io::stdin;
 
 use crate::game::player::Player;
 use crate::number::Number;
-use crate::number::NumberError;
+use crate::number::ValidationError;
 
 fn get_input_as_string() -> Result<String, String> {
     let mut input = String::new();
@@ -13,17 +13,21 @@ fn get_input_as_string() -> Result<String, String> {
 }
 
 fn get_number_from_input(number: &str) -> Result<Number, String> {
-    match Number::from(number) {
-        Err(NumberError::NotCorrectSize) => {
+    match Number::from(number, 4) {
+        Err(ValidationError::NotCorrectSize) => {
             Err(String::from("The number is not of the correct size"))
         }
-        Err(NumberError::NotNumeric) => Err(String::from("The input is not numeric")),
-        Err(NumberError::RepeatingNumbers) => Err(String::from(
+        Err(ValidationError::NotNumeric) => Err(String::from("The input is not numeric")),
+        Err(ValidationError::RepeatingDigits) => Err(String::from(
             "The number must contain non-repeating digits only",
         )),
-        Err(NumberError::FirstDigitZero) => {
+        Err(ValidationError::FirstDigitZero) => {
             Err(String::from("The number cannot start with a zero"))
         }
+        Err(ValidationError::SizeBeyondLimit) => {
+            Err(String::from("The number size provided is too large"))
+        }
+        Err(ValidationError::SizeZero) => Err(String::from("The number size cannot be 0")),
         Ok(num) => Ok(num),
     }
 }

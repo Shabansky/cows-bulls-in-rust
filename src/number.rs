@@ -1,17 +1,19 @@
 use std::collections::HashSet;
 use std::fmt::{Display, Formatter};
 
-//TODO: This will need to be dependent on settings at some point.
-const NUM_SIZE: usize = 4;
+//At most, you can have a 10-digit non-repeating number.
+const NUM_CAP: usize = 10;
 
-type Num = [i8; NUM_SIZE];
+type Num = Vec<u32>;
 
 #[derive(Debug, PartialEq)]
-pub enum NumberError {
+pub enum ValidationError {
     NotCorrectSize,
     NotNumeric,
-    RepeatingNumbers,
+    RepeatingDigits,
     FirstDigitZero,
+    SizeZero,
+    SizeBeyondLimit,
 }
 
 #[derive(Debug)]
@@ -24,45 +26,63 @@ impl Number {
         Number { number }
     }
 
-    pub fn from(text: &str) -> Result<Self, NumberError> {
-        match Self::validate(text) {
-            Ok(number) => Ok(Self::new(number)),
-            Err(err) => Err(err),
-        }
+    pub fn from(text: &str, num_size: usize) -> Result<Self, ValidationError> {
+        Self::validate_cap(num_size)?;
+
+        Self::validate(text, num_size)?;
+
+        Ok(Self::new(
+            text.chars()
+                .map(|char| char.to_digit(10).unwrap())
+                .collect(),
+        ))
     }
 
-    pub fn get(&self) -> Num {
-        self.number
+    pub fn get(&self) -> &Num {
+        &self.number
     }
 
-    fn validate(number: &str) -> Result<Num, NumberError> {
-        if number.len() != NUM_SIZE {
-            return Err(NumberError::NotCorrectSize);
+    fn validate_cap(num_size: usize) -> Result<bool, ValidationError> {
+        if num_size == 0 {
+            return Err(ValidationError::SizeZero);
         }
 
-        let mut guess_arr: Num = [0; NUM_SIZE];
-        for (index, character) in number.chars().enumerate() {
+        if num_size > NUM_CAP {
+            return Err(ValidationError::SizeBeyondLimit);
+        }
+
+        Ok(true)
+    }
+
+    //TODO: Not really enjoying that second parameter there
+    fn validate(number: &str, num_size: usize) -> Result<bool, ValidationError> {
+        let number_chars: Vec<char> = number.chars().collect();
+
+        if number_chars.len() != num_size {
+            return Err(ValidationError::NotCorrectSize);
+        }
+
+        for character in number_chars.iter() {
             if !character.is_numeric() {
-                return Err(NumberError::NotNumeric);
+                return Err(ValidationError::NotNumeric);
             }
-            guess_arr[index] = character.to_digit(10).unwrap() as i8;
         }
 
-        let mut unique_checker: HashSet<i8> = HashSet::new();
-        for value in guess_arr.iter() {
+        let mut unique_checker: HashSet<u8> = HashSet::new();
+        for value in number.as_bytes().iter() {
             unique_checker.insert(*value);
         }
 
         //Checking simply against length as HashSet overwrites duplicating values
-        if unique_checker.len() != NUM_SIZE {
-            return Err(NumberError::RepeatingNumbers);
+        if unique_checker.len() != num_size {
+            return Err(ValidationError::RepeatingDigits);
         }
 
-        if guess_arr[0] == 0 {
-            return Err(NumberError::FirstDigitZero);
+        if number_chars[0] == '0' {
+            return Err(ValidationError::FirstDigitZero);
         }
 
-        Ok(guess_arr)
+        Ok(true)
     }
 }
 
@@ -81,13 +101,28 @@ impl Display for Number {
 
 #[test]
 fn validation_catches_cases() {
-    assert_eq!(Number::validate("123"), Err(NumberError::NotCorrectSize));
-    assert_eq!(Number::validate(""), Err(NumberError::NotCorrectSize));
     assert_eq!(
-        Number::validate("12345678901234567890"),
-        Err(NumberError::NotCorrectSize)
+        Number::validate("123", 4),
+        Err(ValidationError::NotCorrectSize)
     );
-    assert_eq!(Number::validate("nota"), Err(NumberError::NotNumeric));
-    assert_eq!(Number::validate("1111"), Err(NumberError::RepeatingNumbers));
-    assert_eq!(Number::validate("0123"), Err(NumberError::FirstDigitZero));
+    assert_eq!(
+        Number::validate("", 4),
+        Err(ValidationError::NotCorrectSize)
+    );
+    assert_eq!(
+        Number::validate("12345678901234567890", 10),
+        Err(ValidationError::NotCorrectSize)
+    );
+    assert_eq!(
+        Number::validate("nota", 4),
+        Err(ValidationError::NotNumeric)
+    );
+    assert_eq!(
+        Number::validate("1111", 4),
+        Err(ValidationError::RepeatingDigits)
+    );
+    assert_eq!(
+        Number::validate("0123", 4),
+        Err(ValidationError::FirstDigitZero)
+    );
 }

@@ -58,11 +58,11 @@ mod test {
 
     #[test]
     fn guess_returns_correct_number_of_cows_and_bulls() {
-        let player_number = Number::new([1, 2, 3, 4]);
+        let player_number = Number::new(vec![1, 2, 3, 4]);
 
-        let number1: Number = Number::new([1, 2, 3, 4]);
-        let number2: Number = Number::new([4, 3, 2, 1]);
-        let number3: Number = Number::new([1, 2, 3, 5]);
+        let number1: Number = Number::new(vec![1, 2, 3, 4]);
+        let number2: Number = Number::new(vec![4, 3, 2, 1]);
+        let number3: Number = Number::new(vec![1, 2, 3, 5]);
 
         let mut guess1 = Guess::new(number1);
         guess1.process_against(&player_number);

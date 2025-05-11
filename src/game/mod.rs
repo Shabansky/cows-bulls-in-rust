@@ -108,13 +108,13 @@ pub mod tests {
     fn number_match_leads_to_game_end() {
         let mut new_game = Game::new();
 
-        let player = Player::new(String::from("Player 1"), Number::new([1, 2, 3, 4]));
+        let player = Player::new(String::from("Player 1"), Number::new(vec![1, 2, 3, 4]));
         new_game.add_player(player);
-        let target_player = Player::new(String::from("Player 2"), Number::new([4, 3, 2, 1]));
+        let target_player = Player::new(String::from("Player 2"), Number::new(vec![4, 3, 2, 1]));
         new_game.add_player(target_player);
 
         assert!(!new_game.is_over);
-        new_game.guess(Number::new([4, 3, 2, 1]));
+        new_game.guess(Number::new(vec![4, 3, 2, 1]));
 
         assert!(new_game.is_over);
     }
