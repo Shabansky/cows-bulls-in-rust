@@ -27,8 +27,6 @@ impl Number {
     }
 
     pub fn from(text: &str, num_size: usize) -> Result<Self, ValidationError> {
-        Self::validate_cap(num_size)?;
-
         Self::validate(text, num_size)?;
 
         Ok(Self::new(
@@ -42,7 +40,9 @@ impl Number {
         &self.number
     }
 
-    fn validate_cap(num_size: usize) -> Result<bool, ValidationError> {
+    //TODO: Not really enjoying that second parameter there
+    //TODO: Think about the return type as well. Maybe Result is not the proper one. Option?
+    fn validate(number: &str, num_size: usize) -> Result<bool, ValidationError> {
         if num_size == 0 {
             return Err(ValidationError::SizeZero);
         }
@@ -51,11 +51,6 @@ impl Number {
             return Err(ValidationError::SizeBeyondLimit);
         }
 
-        Ok(true)
-    }
-
-    //TODO: Not really enjoying that second parameter there
-    fn validate(number: &str, num_size: usize) -> Result<bool, ValidationError> {
         let number_chars: Vec<char> = number.chars().collect();
 
         if number_chars.len() != num_size {
