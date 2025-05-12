@@ -27,39 +27,41 @@ impl Number {
     }
 
     pub fn from(text: &str, num_size: usize) -> Result<Self, ValidationError> {
-        Self::validate(text, num_size)?;
+        let has_errors = Self::validate(text, num_size);
 
-        Ok(Self::new(
-            text.chars()
-                .map(|char| char.to_digit(10).unwrap())
-                .collect(),
-        ))
+        if let Some(error) = has_errors {
+            Err(error)
+        } else {
+            Ok(Self::new(
+                text.chars()
+                    .map(|char| char.to_digit(10).unwrap())
+                    .collect(),
+            ))
+        }
     }
 
     pub fn get(&self) -> &Num {
         &self.number
     }
 
-    //TODO: Not really enjoying that second parameter there
-    //TODO: Think about the return type as well. Maybe Result is not the proper one. Option?
-    fn validate(number: &str, num_size: usize) -> Result<bool, ValidationError> {
+    fn validate(number: &str, num_size: usize) -> Option<ValidationError> {
         if num_size == 0 {
-            return Err(ValidationError::SizeZero);
+            return Some(ValidationError::SizeZero);
         }
 
         if num_size > NUM_CAP {
-            return Err(ValidationError::SizeBeyondLimit);
+            return Some(ValidationError::SizeBeyondLimit);
         }
 
         let number_chars: Vec<char> = number.chars().collect();
 
         if number_chars.len() != num_size {
-            return Err(ValidationError::NotCorrectSize);
+            return Some(ValidationError::NotCorrectSize);
         }
 
         for character in number_chars.iter() {
             if !character.is_numeric() {
-                return Err(ValidationError::NotNumeric);
+                return Some(ValidationError::NotNumeric);
             }
         }
 
@@ -70,14 +72,14 @@ impl Number {
 
         //Checking simply against length as HashSet overwrites duplicating values
         if unique_checker.len() != num_size {
-            return Err(ValidationError::RepeatingDigits);
+            return Some(ValidationError::RepeatingDigits);
         }
 
         if number_chars[0] == '0' {
-            return Err(ValidationError::FirstDigitZero);
+            return Some(ValidationError::FirstDigitZero);
         }
 
-        Ok(true)
+        None
     }
 }
 
@@ -98,26 +100,26 @@ impl Display for Number {
 fn validation_catches_cases() {
     assert_eq!(
         Number::validate("123", 4),
-        Err(ValidationError::NotCorrectSize)
+        Some(ValidationError::NotCorrectSize)
     );
     assert_eq!(
         Number::validate("", 4),
-        Err(ValidationError::NotCorrectSize)
+        Some(ValidationError::NotCorrectSize)
     );
     assert_eq!(
         Number::validate("12345678901234567890", 10),
-        Err(ValidationError::NotCorrectSize)
+        Some(ValidationError::NotCorrectSize)
     );
     assert_eq!(
         Number::validate("nota", 4),
-        Err(ValidationError::NotNumeric)
+        Some(ValidationError::NotNumeric)
     );
     assert_eq!(
         Number::validate("1111", 4),
-        Err(ValidationError::RepeatingDigits)
+        Some(ValidationError::RepeatingDigits)
     );
     assert_eq!(
         Number::validate("0123", 4),
-        Err(ValidationError::FirstDigitZero)
+        Some(ValidationError::FirstDigitZero)
     );
 }
