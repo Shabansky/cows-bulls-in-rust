@@ -1,5 +1,3 @@
-use std::default::Default;
-
 pub mod player;
 
 use crate::number::Number;
@@ -7,20 +5,28 @@ use guess::Guess;
 use player::Player;
 pub mod guess;
 
+pub mod view;
+use view::ViewControl;
+
 mod player_controller;
 use player_controller::PlayerController;
 
 #[derive(Debug)]
-pub struct Game {
+pub struct Game<'a, T: ViewControl> {
     player_controller: PlayerController,
     is_over: bool,
+    view_controller: &'a T,
 }
 
-impl Game {
-    pub fn new() -> Game {
+impl<T: ViewControl> Game<'_, T> {
+    pub fn new(view_controller: &T) -> Game<T>
+    where
+        T: ViewControl,
+    {
         Game {
             player_controller: PlayerController::new(),
             is_over: false,
+            view_controller,
         }
     }
 
@@ -59,7 +65,7 @@ impl Game {
                 game_over_closure(self);
                 return;
             }
-
+            self.view_controller.clear();
             self.player_controller.switch_current_player();
         }
     }
@@ -87,26 +93,22 @@ impl Game {
     }
 }
 
-impl Default for Game {
-    fn default() -> Self {
-        Self::new()
-    }
-}
-
 #[cfg(test)]
 pub mod tests {
+    use crate::game::view::MockControl;
+
     use super::*;
 
     #[test]
     fn new_game_has_correct_starting_settings() {
-        let new_game = Game::new();
+        let new_game = Game::new(&MockControl {});
 
         assert_eq!(false, new_game.is_over);
     }
 
     #[test]
     fn number_match_leads_to_game_end() {
-        let mut new_game = Game::new();
+        let mut new_game = Game::new(&MockControl {});
 
         let player = Player::new(String::from("Player 1"), Number::new(vec![1, 2, 3, 4]));
         new_game.add_player(player);
