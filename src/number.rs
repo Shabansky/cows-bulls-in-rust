@@ -107,9 +107,10 @@ fn validation_catches_cases() {
         Some(ValidationError::NotCorrectSize)
     );
     assert_eq!(
-        Number::validate("12345678901234567890", 10),
-        Some(ValidationError::NotCorrectSize)
+        Number::validate("1234", 11),
+        Some(ValidationError::SizeBeyondLimit)
     );
+    assert_eq!(Number::validate("1234", 0), Some(ValidationError::SizeZero));
     assert_eq!(
         Number::validate("nota", 4),
         Some(ValidationError::NotNumeric)
