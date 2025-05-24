@@ -1,13 +1,9 @@
-// pub mod player;
-
 use super::player::Player;
 
 #[derive(Debug)]
 pub struct PlayerController {
     pub players: Vec<Player>,
     current_player: usize,
-    target_player: usize,
-    winning_player: usize,
 }
 
 impl PlayerController {
@@ -15,8 +11,6 @@ impl PlayerController {
         PlayerController {
             players: vec![],
             current_player: 0,
-            target_player: 0,
-            winning_player: 0,
         }
     }
 
@@ -68,7 +62,6 @@ pub mod tests {
 
         assert_eq!(0, new_controller.players.iter().count());
         assert_eq!(0, new_controller.current_player);
-        assert_eq!(0, new_controller.winning_player);
     }
 
     #[test]
