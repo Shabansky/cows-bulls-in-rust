@@ -1,6 +1,8 @@
 type Cows = usize;
 type Bulls = usize;
 
+use std::fmt::Display;
+
 use crate::number::Number;
 
 #[derive(Debug)]
@@ -52,6 +54,11 @@ impl Guess {
     }
 }
 
+impl Display for Guess {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.number)
+    }
+}
 #[cfg(test)]
 mod test {
     use super::*;

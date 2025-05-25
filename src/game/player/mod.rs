@@ -1,10 +1,11 @@
 use super::{guess::Guess, Number};
+use std::collections::HashMap;
 
 #[derive(Debug)]
 pub struct Player {
     name: String,
     number: Number,
-    guesses: Vec<Guess>,
+    guesses: HashMap<String, Guess>,
 }
 
 impl Player {
@@ -12,7 +13,7 @@ impl Player {
         Self {
             name,
             number,
-            guesses: vec![],
+            guesses: HashMap::new(),
         }
     }
 
@@ -25,6 +26,38 @@ impl Player {
     }
 
     pub fn add_guess(&mut self, guess: Guess) {
-        self.guesses.push(guess);
+        self.guesses.insert(guess.to_string(), guess);
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::number::Number;
+
+    #[test]
+    fn new_guess_updates_guesses_counter() {
+        let number = Number::from("1234", 4).unwrap();
+        let mut player = Player::new("Name".to_string(), number);
+        let guess = Number::from("1234", 4).unwrap();
+
+        assert_eq!(0, player.guesses.len(), "player guesses not right number");
+        player.add_guess(Guess::new(guess));
+
+        assert_eq!(1, player.guesses.len(), "player guesses not right number");
+    }
+
+    #[test]
+    fn old_guess_does_not_update_guesses_counter() {
+        let number = Number::from("1234", 4).unwrap();
+        let mut player = Player::new("Name".to_string(), number);
+        let guess = Number::from("1234", 4).unwrap();
+        let guess_2 = Number::from("1234", 4).unwrap();
+        assert_eq!(0, player.guesses.len(), "player guesses not right number");
+        player.add_guess(Guess::new(guess));
+        assert_eq!(1, player.guesses.len(), "player guesses not right number");
+        player.add_guess(Guess::new(guess_2));
+
+        assert_eq!(1, player.guesses.len(), "player guesses not right number");
     }
 }
