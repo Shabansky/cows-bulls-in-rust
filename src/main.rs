@@ -3,6 +3,7 @@ mod number;
 mod input_helper;
 use input_helper::{create_new_player_from_input, create_number_from_input};
 mod game;
+use game::player_controller::PlayerControllerError;
 use game::view::{TerminalControl, ViewControl};
 use game::Game;
 fn main() {
@@ -11,10 +12,46 @@ fn main() {
     let mut game = Game::new(&view_control);
 
     //TODO: Iterate these based on a player_count settings
-    game.add_player(create_new_player_from_input());
-    view_control.clear();
-    game.add_player(create_new_player_from_input());
-    view_control.clear();
+
+    loop {
+        let created_player = create_new_player_from_input();
+
+        let player = game
+            .player_controller
+            .add_player(create_new_player_from_input());
+        match player {
+            Ok(_) => {
+                view_control.clear();
+                break;
+            }
+            Err(PlayerControllerError::PlayerWithNameAlreadyExists) => {
+                println!(
+                    "Player with name {} already exists",
+                    created_player.get_name()
+                );
+            }
+        }
+    }
+
+    loop {
+        let created_player = create_new_player_from_input();
+
+        let player = game
+            .player_controller
+            .add_player(create_new_player_from_input());
+        match player {
+            Ok(_) => {
+                view_control.clear();
+                break;
+            }
+            Err(PlayerControllerError::PlayerWithNameAlreadyExists) => {
+                println!(
+                    "Player with name {} already exists",
+                    created_player.get_name()
+                );
+            }
+        }
+    }
 
     game.run(
         |game| {

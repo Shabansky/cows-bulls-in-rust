@@ -1,5 +1,10 @@
 use super::player::Player;
 
+#[derive(PartialEq, Debug)]
+pub enum PlayerControllerError {
+    PlayerWithNameAlreadyExists,
+}
+
 #[derive(Debug)]
 pub struct PlayerController {
     pub players: Vec<Player>,
@@ -14,8 +19,17 @@ impl PlayerController {
         }
     }
 
-    pub fn add_player(&mut self, player: Player) {
+    pub fn add_player(&mut self, player: Player) -> Result<(), PlayerControllerError> {
+        let new_player_name = player.get_name();
+
+        for player in self.players.iter() {
+            if player.get_name() == new_player_name {
+                return Err(PlayerControllerError::PlayerWithNameAlreadyExists);
+            }
+        }
+
         self.players.push(player);
+        Ok(())
     }
 
     pub fn switch_current_player(&mut self) {
@@ -117,5 +131,18 @@ pub mod tests {
 
         assert_eq!(1, other_players.len());
         assert_eq!(&String::from("Player 1"), other_players[0].get_name());
+    }
+
+    #[test]
+    fn player_with_duplicate_name_produces_error() {
+        let mut controller = PlayerController::new();
+        let player_original = Player::new(String::from("Player"), Number::new(vec![1, 2, 3, 4]));
+        assert_eq!(Ok(()), controller.add_player(player_original));
+        let player_duplicate = Player::new(String::from("Player"), Number::new(vec![1, 2, 3, 4]));
+
+        assert_eq!(
+            Err(PlayerControllerError::PlayerWithNameAlreadyExists),
+            controller.add_player(player_duplicate)
+        );
     }
 }

@@ -8,12 +8,12 @@ pub mod guess;
 pub mod view;
 use view::ViewControl;
 
-mod player_controller;
+pub mod player_controller;
 use player_controller::PlayerController;
 
 #[derive(Debug)]
 pub struct Game<'a, T: ViewControl> {
-    player_controller: PlayerController,
+    pub player_controller: PlayerController,
     is_over: bool,
     view_controller: &'a T,
 }
@@ -28,10 +28,6 @@ impl<T: ViewControl> Game<'_, T> {
             is_over: false,
             view_controller,
         }
-    }
-
-    pub fn add_player(&mut self, player: Player) {
-        self.player_controller.add_player(player);
     }
 
     pub fn get_current_player(&self) -> &Player {
