@@ -12,46 +12,8 @@ fn main() {
     let mut game = Game::new(&view_control);
 
     //TODO: Iterate these based on a player_count settings
-
-    loop {
-        let created_player = create_new_player_from_input();
-
-        let player = game
-            .player_controller
-            .add_player(create_new_player_from_input());
-        match player {
-            Ok(_) => {
-                view_control.clear();
-                break;
-            }
-            Err(PlayerControllerError::PlayerWithNameAlreadyExists) => {
-                println!(
-                    "Player with name {} already exists",
-                    created_player.get_name()
-                );
-            }
-        }
-    }
-
-    loop {
-        let created_player = create_new_player_from_input();
-
-        let player = game
-            .player_controller
-            .add_player(create_new_player_from_input());
-        match player {
-            Ok(_) => {
-                view_control.clear();
-                break;
-            }
-            Err(PlayerControllerError::PlayerWithNameAlreadyExists) => {
-                println!(
-                    "Player with name {} already exists",
-                    created_player.get_name()
-                );
-            }
-        }
-    }
+    add_player(&mut game);
+    add_player(&mut game);
 
     game.run(
         |game| {
@@ -64,4 +26,27 @@ fn main() {
             println!("Game over!");
         },
     );
+}
+
+fn add_player(game: &mut Game<TerminalControl>) {
+    let view_control = TerminalControl {};
+    loop {
+        let created_player = create_new_player_from_input();
+
+        let player = game
+            .player_controller
+            .add_player(create_new_player_from_input());
+        match player {
+            Ok(_) => {
+                view_control.clear();
+                break;
+            }
+            Err(PlayerControllerError::PlayerWithNameAlreadyExists) => {
+                println!(
+                    "Player with name {} already exists",
+                    created_player.get_name()
+                );
+            }
+        }
+    }
 }
