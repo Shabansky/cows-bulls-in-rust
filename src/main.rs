@@ -32,20 +32,15 @@ fn add_player(game: &mut Game<TerminalControl>) {
     let view_control = TerminalControl {};
     loop {
         let created_player = create_new_player_from_input();
-
-        let player = game
-            .player_controller
-            .add_player(create_new_player_from_input());
+        let player_name = created_player.get_name().clone();
+        let player = game.player_controller.add_player(created_player);
         match player {
             Ok(_) => {
                 view_control.clear();
                 break;
             }
             Err(PlayerControllerError::PlayerWithNameAlreadyExists) => {
-                println!(
-                    "Player with name {} already exists",
-                    created_player.get_name()
-                );
+                println!("Player with name {} already exists", player_name);
             }
         }
     }
