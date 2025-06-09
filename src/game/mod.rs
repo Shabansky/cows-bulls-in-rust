@@ -107,9 +107,12 @@ pub mod tests {
         let mut new_game = Game::new(&MockControl {});
 
         let player = Player::new(String::from("Player 1"), Number::new(vec![1, 2, 3, 4]));
-        new_game.add_player(player);
+        new_game.player_controller.add_player(player).unwrap();
         let target_player = Player::new(String::from("Player 2"), Number::new(vec![4, 3, 2, 1]));
-        new_game.add_player(target_player);
+        new_game
+            .player_controller
+            .add_player(target_player)
+            .unwrap();
 
         assert!(!new_game.is_over);
         new_game.guess(Number::new(vec![4, 3, 2, 1]));
