@@ -84,7 +84,7 @@ pub mod tests {
 
         assert_eq!(0, controller.players.iter().count());
         let player = Player::new(String::from("Player"), Number::new(vec![1, 2, 3, 4]));
-        controller.add_player(player);
+        controller.add_player(player).unwrap();
 
         assert_eq!(1, controller.players.iter().count());
     }
@@ -93,9 +93,9 @@ pub mod tests {
     fn switching_current_player_points_to_different_player() {
         let mut controller = PlayerController::new();
         let player = Player::new(String::from("Player 1"), Number::new(vec![1, 2, 3, 4]));
-        controller.add_player(player);
+        controller.add_player(player).unwrap();
         let player = Player::new(String::from("Player 2"), Number::new(vec![1, 2, 3, 4]));
-        controller.add_player(player);
+        controller.add_player(player).unwrap();
 
         assert_eq!("Player 1", controller.get_current_player().get_name());
         controller.switch_current_player();
@@ -117,9 +117,9 @@ pub mod tests {
         let mut controller = PlayerController::new();
 
         let player = Player::new(String::from("Player 1"), Number::new(vec![1, 2, 3, 4]));
-        controller.add_player(player);
+        controller.add_player(player).unwrap();
         let player = Player::new(String::from("Player 2"), Number::new(vec![1, 2, 3, 4]));
-        controller.add_player(player);
+        controller.add_player(player).unwrap();
 
         let other_players = controller.get_opponent_players();
 
