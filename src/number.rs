@@ -16,7 +16,7 @@ pub enum ValidationError {
     SizeBeyondLimit,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq)]
 pub struct Number {
     number: Num,
 }
@@ -96,31 +96,55 @@ impl Display for Number {
     }
 }
 
-#[test]
-fn validation_catches_cases() {
-    assert_eq!(
-        Number::validate("123", 4),
-        Some(ValidationError::NotCorrectSize)
-    );
-    assert_eq!(
-        Number::validate("", 4),
-        Some(ValidationError::NotCorrectSize)
-    );
-    assert_eq!(
-        Number::validate("1234", 11),
-        Some(ValidationError::SizeBeyondLimit)
-    );
-    assert_eq!(Number::validate("1234", 0), Some(ValidationError::SizeZero));
-    assert_eq!(
-        Number::validate("nota", 4),
-        Some(ValidationError::NotNumeric)
-    );
-    assert_eq!(
-        Number::validate("1111", 4),
-        Some(ValidationError::RepeatingDigits)
-    );
-    assert_eq!(
-        Number::validate("0123", 4),
-        Some(ValidationError::FirstDigitZero)
-    );
+#[cfg(test)]
+mod test {
+    use super::*;
+
+    #[test]
+    fn correct_inputs_return_a_number() {
+        assert_eq!(
+            Number {
+                number: vec![1, 2, 3, 4]
+            },
+            Number::from("1234", 4).unwrap()
+        );
+    }
+
+    #[test]
+    fn number_has_expected_digits() {
+        let number = Number::from("1234", 4).unwrap();
+        assert_eq!(1, number.get()[0]);
+        assert_eq!(2, number.get()[1]);
+        assert_eq!(3, number.get()[2]);
+        assert_eq!(4, number.get()[3]);
+    }
+
+    #[test]
+    fn validation_catches_cases() {
+        assert_eq!(
+            Number::validate("123", 4),
+            Some(ValidationError::NotCorrectSize)
+        );
+        assert_eq!(
+            Number::validate("", 4),
+            Some(ValidationError::NotCorrectSize)
+        );
+        assert_eq!(
+            Number::validate("1234", 11),
+            Some(ValidationError::SizeBeyondLimit)
+        );
+        assert_eq!(Number::validate("1234", 0), Some(ValidationError::SizeZero));
+        assert_eq!(
+            Number::validate("nota", 4),
+            Some(ValidationError::NotNumeric)
+        );
+        assert_eq!(
+            Number::validate("1111", 4),
+            Some(ValidationError::RepeatingDigits)
+        );
+        assert_eq!(
+            Number::validate("0123", 4),
+            Some(ValidationError::FirstDigitZero)
+        );
+    }
 }
