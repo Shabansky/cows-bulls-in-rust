@@ -6,14 +6,18 @@ mod game;
 use game::player_controller::PlayerControllerError;
 use game::view::{TerminalControl, ViewControl};
 use game::Game;
+
+mod settings;
+use settings::settings::DEFAULT_NUM_PLAYERS;
+
 fn main() {
     println!("Welcome to Cows and Bulls!");
     let view_control = TerminalControl {};
     let mut game = Game::new(&view_control);
 
-    //TODO: Iterate these based on a player_count settings
-    add_player(&mut game);
-    add_player(&mut game);
+    for _ in 0..DEFAULT_NUM_PLAYERS {
+        add_player(&mut game);
+    }
 
     game.run(
         |game| {
