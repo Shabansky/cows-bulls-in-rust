@@ -12,14 +12,14 @@ pub mod player_controller;
 use player_controller::PlayerController;
 
 #[derive(Debug)]
-pub struct Game<'a, T: ViewControl> {
+pub struct Game<T: ViewControl> {
     pub player_controller: PlayerController,
     is_over: bool,
-    view_controller: &'a T,
+    pub view_controller: T,
 }
 
-impl<T: ViewControl> Game<'_, T> {
-    pub fn new(view_controller: &T) -> Game<T>
+impl<T: ViewControl> Game<T> {
+    pub fn new(view_controller: T) -> Game<T>
     where
         T: ViewControl,
     {
@@ -97,14 +97,14 @@ pub mod tests {
 
     #[test]
     fn new_game_has_correct_starting_settings() {
-        let new_game = Game::new(&MockControl {});
+        let new_game = Game::new(MockControl {});
 
         assert_eq!(false, new_game.is_over);
     }
 
     #[test]
     fn number_match_leads_to_game_end() {
-        let mut new_game = Game::new(&MockControl {});
+        let mut new_game = Game::new(MockControl {});
 
         let player = Player::new(String::from("Player 1"), Number::new(vec![1, 2, 3, 4]));
         new_game.player_controller.add_player(player).unwrap();
