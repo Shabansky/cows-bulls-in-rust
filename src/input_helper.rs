@@ -32,6 +32,14 @@ fn get_number_from_input(number: &str) -> Result<Number, String> {
     }
 }
 
+fn get_name_from_input(name: &str) -> Result<String, String> {
+    if name.len() == 0 {
+        return Err(String::from("Please enter a name for the player"));
+    }
+
+    Ok(name.to_string())
+}
+
 fn create_new_value_from_input<T, F>(mut procedure: F) -> T
 where
     F: FnMut() -> Result<T, String>,
@@ -61,7 +69,8 @@ pub fn create_number_from_input() -> Number {
 pub fn create_new_player_from_input() -> Player {
     let player_name = create_new_value_from_input(|| {
         println!("Please enter player name");
-        get_input_as_string()
+        let name = get_input_as_string()?;
+        get_name_from_input(&name)
     });
     let player_number = create_new_value_from_input(|| {
         println!("Please enter player number");
