@@ -43,13 +43,13 @@ impl PlayerController {
     pub fn get_current_player(&self) -> &Player {
         self.players
             .get(self.current_player)
-            .expect("cannot retrieve player as none set")
+            .expect("cannot retrieve current player as none set")
     }
 
     pub fn get_current_player_mut(&mut self) -> &mut Player {
         self.players
             .get_mut(self.current_player)
-            .expect("cannot retrieve player as none set")
+            .expect("cannot retrieve current player as none set")
     }
 
     pub fn get_opponent_players(&self) -> Vec<&Player> {
@@ -82,14 +82,14 @@ pub mod tests {
     }
 
     #[test]
-    #[should_panic(expected = "cannot retrieve player as none set")]
+    #[should_panic(expected = "cannot retrieve current player as none set")]
     fn no_player_in_controller_panics_when_current_player_called() {
         let controller = PlayerController::new();
         controller.get_current_player();
     }
 
     #[test]
-    #[should_panic(expected = "cannot retrieve player as none set")]
+    #[should_panic(expected = "cannot retrieve current player as none set")]
     fn no_player_in_controller_panics_when_current_player_mut_called() {
         let mut controller = PlayerController::new();
         controller.get_current_player_mut();
