@@ -53,11 +53,17 @@ impl PlayerController {
     }
 
     pub fn get_opponent_players(&self) -> Vec<&Player> {
-        let current_player_name = self.get_current_player().get_name();
-
+        //TODO: Think if this can be further made better (it can)
         self.players
             .iter()
-            .filter(|player| player.get_name() != current_player_name)
+            .enumerate()
+            .filter_map(|(index, player)| {
+                if index != self.current_player {
+                    Some(player)
+                } else {
+                    None
+                }
+            })
             .collect()
     }
 }
